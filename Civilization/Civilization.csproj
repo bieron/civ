@@ -55,6 +55,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DistanceCalculator.cs" />
     <Compile Include="ViewModels\GuiModel.cs" />
     <Compile Include="Views\GUI.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
