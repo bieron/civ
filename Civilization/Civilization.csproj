@@ -173,6 +173,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Models\DistanceCalculator.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\Civ.cs" />
