@@ -16,8 +16,7 @@ namespace Civilization.ViewModels
     public class Scene : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
-        private BasicEffect basicEffect;
-        private Buffer<VertexPositionColor> vertices;
+        private Texture2D texture;
         private VertexInputLayout inputLayout;
 
         /// <summary>
@@ -35,66 +34,7 @@ namespace Civilization.ViewModels
 
         protected override void LoadContent()
         {
-            // Creates a basic effect
-            basicEffect = ToDisposeContent(new BasicEffect(GraphicsDevice)
-            {
-                VertexColorEnabled = true,
-                View = Matrix.LookAtRH(new Vector3(0, 0, 5), new Vector3(0, 0, 0), Vector3.UnitY),
-                Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f),
-                World = Matrix.Identity
-            });
-
-            // Creates vertices for the cube
-            vertices = ToDisposeContent(Buffer.Vertex.New(
-                GraphicsDevice,
-                new[]
-                    {
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.Orange), // Back
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.Orange),
-
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.Orange), // Front
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.Orange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.Orange),
-
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.OrangeRed), // Top
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.OrangeRed),
-
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.OrangeRed), // Bottom
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.OrangeRed),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.OrangeRed),
-
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.DarkOrange), // Left
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(-1.0f, -1.0f, 1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(-1.0f, 1.0f, 1.0f), Color.DarkOrange),
-
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.DarkOrange), // Right
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, -1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, -1.0f, 1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, 1.0f), Color.DarkOrange),
-                        new VertexPositionColor(new Vector3(1.0f, 1.0f, -1.0f), Color.DarkOrange),
-                    }));
-            ToDisposeContent(vertices);
-
-            // Create an input layout from the vertices
-            inputLayout = VertexInputLayout.FromBuffer(0, vertices);
+            texture = Texture2D.Load(GraphicsDevice, @"C:\Users\Przemek\Downloads\smaller.jpg");
 
             base.LoadContent();
         }
@@ -108,11 +48,23 @@ namespace Civilization.ViewModels
 
         protected override void Update(GameTime gameTime)
         {
-            // Rotate the cube.
-            var time = (float)gameTime.TotalGameTime.TotalSeconds;
-            basicEffect.World = Matrix.RotationX(time) * Matrix.RotationY(time * 2.0f) * Matrix.RotationZ(time * .7f);
-            basicEffect.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)GraphicsDevice.BackBuffer.Width / GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
-
+            Random random = new Random();
+            Image img = texture.GetDataAsImage();
+            for(int i=0;i<img.PixelBuffer[0].Width;i++)
+                for (int j = 0; j < img.PixelBuffer[0].Height; j++)
+                {
+                    Color pixel = new Color()
+                    {
+                        A = 255,
+                        R = (byte)random.Next(255),
+                        G = (byte)random.Next(255),
+                        B = (byte)random.Next(255)
+                    };
+                    img.PixelBuffer[0].SetPixel<Color>(i, j, pixel);
+                }
+            texture.Dispose();
+            texture = Texture2D.New(GraphicsDevice, img);
+            img.Dispose();
             // Handle base.Update
             base.Update(gameTime);
         }
@@ -122,13 +74,10 @@ namespace Civilization.ViewModels
             // Clears the screen with the Color.CornflowerBlue
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // Setup the vertices
-            GraphicsDevice.SetVertexBuffer(vertices);
-            GraphicsDevice.SetVertexInputLayout(inputLayout);
-
-            // Apply the basic effect technique and draw the rotating cube
-            basicEffect.CurrentTechnique.Passes[0].Apply();
-            GraphicsDevice.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
+            SpriteBatch spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null);
+            spriteBatch.Draw(texture, Vector2.Zero, Color.White);
+            spriteBatch.End();
 
             // Handle base.Draw
             base.Draw(gameTime);
