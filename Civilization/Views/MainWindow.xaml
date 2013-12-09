@@ -2,10 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="clr-namespace:Civilization.ViewModels"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:interop="clr-namespace:System.Windows.Interop;assembly=PresentationCore"
+        xmlns:toolkit="clr-namespace:SharpDX.Toolkit;assembly=SharpDX.Toolkit.Game"
+        xmlns:views="clr-namespace:Civilization.Views"
+        Title="MainWindow" MinHeight="350" MinWidth="525">
     <Window.DataContext>
-        <viewModels:GuiModel />
+        <viewModels:GuiViewModel />
     </Window.DataContext>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" />
+            <ColumnDefinition MinWidth="200"  Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <views:PaintingView Game="{Binding Game}" />
+        <Grid Grid.Column="1">
+            <Label Content="{Binding Text}" />
+            <Button Content="Button" HorizontalAlignment="Left" Margin="44,90,0,0" VerticalAlignment="Top" Width="75" Command="{Binding Send}"/>
+        </Grid>
     </Grid>
 </Window>
