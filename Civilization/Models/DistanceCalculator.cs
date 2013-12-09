@@ -56,7 +56,7 @@ namespace Civilization.Models {
         //parametry
         const bool debug = true;
         const int waterCost = 5;
-        const int stopValue = 20000; //tak sobie eksperymentalnie dobrałem
+        const int stopValue = 10000; //tak sobie eksperymentalnie dobrałem
 
         public AStarCalculator(Cell from, Cell to) {
             startingNode = new AStarNode(from, null, this);
@@ -78,15 +78,19 @@ namespace Civilization.Models {
             while (openList.Count != 0 && targetNode == null && openList.First().f<stopValue)
                 processNode(openList.First());
             if (targetNode == null)
-                if (openList.First().f > stopValue)
+                if (openList.Count != 0 && openList.First().f >= stopValue)
+                {
+                    //Console.WriteLine("zwrócono stop value");
                     return stopValue;
-                else {
-                    Console.WriteLine("DistanceCalculator: Nie znaleziono ścieżki!"); //raczej niemożliwa sytuacja, ale nich będzie jakby się coś miało zmienić
+                }
+                else
+                {
+                    //if (openList.Count==0)
+                        Console.WriteLine("DistanceCalculator: Nie znaleziono ścieżki! From ["+startingNode.cell.getX()+"]["+startingNode.cell.getY()+"] to ["+targetCell.getX()+"]["+targetCell.getY()+"]"); //raczej niemożliwa sytuacja, ale nich będzie jakby się coś miało zmienić
                     return 999999;
                 }
             else {
-                if (debug)
-                    ;//TODO zrób coś ze ścieżką - wyswietl ja, wypisz, cokolwiek
+                //Console.WriteLine("znaleziono odległość "+targetNode.g);
                 return targetNode.g;
             }
 
@@ -98,8 +102,8 @@ namespace Civilization.Models {
                     openList.Insert(index, node);
                     return;
                 }
-                openList.Add(node);
             }
+            openList.Add(node);
         }
 
         private void processNode(AStarNode node) {
@@ -127,11 +131,11 @@ namespace Civilization.Models {
                     }
                 }
                 if (nodeInOpen == null)
-                    insertToOpenList(new AStarNode(theCell, startingNode, this));
+                    insertToOpenList(new AStarNode(theCell, node, this));
                 else { //node jest już na liście open
                     if (nodeInOpen.g > node.g + costToReachNeighbour(node.cell, theCell)) {
                         openList.Remove(nodeInOpen);
-                        insertToOpenList(new AStarNode(theCell, startingNode, this));
+                        insertToOpenList(new AStarNode(theCell, node, this));
                     }
                 }
             }

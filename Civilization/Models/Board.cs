@@ -1,25 +1,30 @@
-﻿namespace Civilization.Models {
+﻿using System.Windows.Controls;
+using System.Drawing;
+namespace Civilization.Models {
     class Board {
         Cell[][] cells;
         int height, width;
-
-        public Board(int height, int width) {
-            this.height = height;
-            this.width = width;
+        Bitmap terrainBMP;
+        public Board(string mapTitle) {
+            terrainBMP = new Bitmap(@"..\..\Resources\" + mapTitle + @"\terrain.bmp");
+            height = terrainBMP.Height;
+            width = terrainBMP.Width;
             createCells();
             initializeNeighbours();
+            initializeCells();
         }
 
         private void createCells() {
             //nie jestem pewien czy tak się inicjalizuje tablice 2D :P
             cells = new Cell[width][];
-            for (int i = 0; i < height; i++) {
+            for (int i = 0; i < width; i++)
+            {
                 cells[i]=new Cell[height];
             }
 
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    cells[i][j]=new Cell(i, j, true);
+                    cells[i][j]=new Cell(i, j);
                 }
             }
         }
@@ -67,7 +72,21 @@
             }
         }
 
-        public void tick() {
+        private void initializeCells() {
+            Bitmap landBMP = new Bitmap(@"..\..\Resources\EgyptMap\land.bmp");
+            for (int i = 0; i < landBMP.Width; i++)
+                for (int j = 0; j < landBMP.Height; j++)
+                    if (landBMP.GetPixel(i, j).R == 0)
+                        cells[i][j].setUnreachable();
+            Bitmap desBMP = new Bitmap(@"..\..\Resources\EgyptMap\desirability.bmp");
+            for (int i = 0; i < landBMP.Width; i++)
+                for (int j = 0; j < landBMP.Height; j++)
+                    cells[i][j].setDesirability(desBMP.GetPixel(i, j).R);
+        }
+
+        public void tick()
+        {
+            //System.Console.WriteLine("Tick!");
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     cells[i][j].calculateNewOwner();
@@ -78,6 +97,18 @@
                     cells[i][j].changeOwner();
                 }
             }
+        }
+
+        public Cell[][] getCells() {
+            return cells;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
         }
     }
 }

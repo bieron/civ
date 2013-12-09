@@ -8,6 +8,7 @@ namespace Civilization.ViewModels
     // Use this namespace here in case we need to use Direct3D11 namespace as well, as this
     // namespace will override the Direct3D11.
     using SharpDX.Toolkit.Graphics;
+    using Civilization.Models;
 
     /// <summary>
     /// Simple MiniCube application using SharpDX.Toolkit.
@@ -17,6 +18,7 @@ namespace Civilization.ViewModels
     {
         private GraphicsDeviceManager graphicsDeviceManager;
         private Texture2D texture;
+        private Texture2D savedTexture;
         private VertexInputLayout inputLayout;
 
         /// <summary>
@@ -34,8 +36,8 @@ namespace Civilization.ViewModels
 
         protected override void LoadContent()
         {
-            texture = Texture2D.Load(GraphicsDevice, @"C:\Users\Przemek\Downloads\smaller.jpg");
-
+            savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
+            
             base.LoadContent();
         }
 
@@ -48,21 +50,24 @@ namespace Civilization.ViewModels
 
         protected override void Update(GameTime gameTime)
         {
-            Random random = new Random();
-            Image img = texture.GetDataAsImage();
-            for(int i=0;i<img.PixelBuffer[0].Width;i++)
+            MainModel.getInstance().getBoard().tick();
+            Image img = savedTexture.GetDataAsImage();
+            Cell[][] cells = MainModel.getInstance().getBoard().getCells();
+            for (int i = 0; i < img.PixelBuffer[0].Width; i++)
+            {
+                //System.Console.WriteLine("Starting column " + i);
                 for (int j = 0; j < img.PixelBuffer[0].Height; j++)
                 {
-                    Color pixel = new Color()
+                    if (cells[i][j].isReachable())
                     {
-                        A = 255,
-                        R = (byte)random.Next(255),
-                        G = (byte)random.Next(255),
-                        B = (byte)random.Next(255)
-                    };
-                    img.PixelBuffer[0].SetPixel<Color>(i, j, pixel);
+                        if (cells[i][j].getOwner() != null)
+                            img.PixelBuffer[0].SetPixel<Color>(i, j, cells[i][j].getOwner().getColor());
+
+                    }
                 }
-            texture.Dispose();
+            }
+            if(texture!=null)
+                texture.Dispose();
             texture = Texture2D.New(GraphicsDevice, img);
             img.Dispose();
             // Handle base.Update

@@ -11,17 +11,39 @@ namespace Civilization.Models {
         bool reachable; //przyda się do odległości od stolicy
         static double waterCost = 5.0;
 
-        public Cell(int x, int y, bool reachable) {
+        public Cell(int x, int y) {
             owner = null;
             capitalDistance = new Dictionary<Civ, double>();
             neighbors = new List<Cell>();
             xCoord = x;
             yCoord = y;
-            this.reachable = reachable;
+            reachable = true;
+        }
+
+        public Civ getOwner() {
+            return owner;
+        }
+
+        public void setOwner(Civ owner) {
+            this.owner = owner;
+        }
+
+        public void setUnreachable() {
+            reachable = false;
         }
 
         public void calculateNewOwner() {
-            //TransitionAlgorithm wchodzi do gry
+            if (!reachable)
+                newOwner = null;
+            //to tylko testy
+            foreach (Cell neighbour in neighbors) {
+                if (neighbour.getOwner() != null && owner==null)
+                    if (MainModel.getInstance().getRandom().Next(255)<=desirability+5) {
+                        newOwner = neighbour.getOwner();
+                        return;
+                    }
+            }
+            newOwner = owner;
         }
 
         public void changeOwner() {
@@ -73,7 +95,12 @@ namespace Civilization.Models {
 
         public double distanceTo(Cell cell) {
             //tu można zmienić metodę liczenia dystansu
-            return DistanceCalculator.calculateDistance(this, cell, DistanceCalculator.CalculationType.CT_ASTAR);
+            return DistanceCalculator.calculateDistance(this, cell, DistanceCalculator.CalculationType.CT_PYTHAGORIAN2);
+        }
+
+        public void setDesirability(byte p)
+        {
+            desirability = p;
         }
     }
 }
