@@ -31,6 +31,11 @@ namespace Civilization.Models
             get { return random; }
         }
 
+        public List<Civ> Civilizations
+        {
+            get { return civilizations; }
+        }
+
         protected MainModel()
         {
             gameBoard = new Board("EgyptMap");
@@ -40,7 +45,7 @@ namespace Civilization.Models
             civilizations.Add(new Civ(gameBoard.Cells[39][21], "Greek Empire", new Color(0, 204, 255)));
             civilizations.Add(new Civ(gameBoard.Cells[117][181], "Egyptian Empire", new Color(255, 204, 0)));
             civilizations.Add(new Civ(gameBoard.Cells[221][137], "Jewish Empire", new Color(153, 77, 204)));
-            civilizations.Add(new Civ(gameBoard.Cells[264][583], "Some African Empire", new Color(204, 0, 0)));
+            civilizations.Add(new Civ(gameBoard.Cells[264][583], "Some African Empire", new Color(104, 0, 0)));
         }
 
         public void AddCivilization(Civ empire)

@@ -63,12 +63,39 @@ namespace Civilization.ViewModels
                     }
                 }
             }
+            paintCapitals(img);
             if (texture != null)
                 texture.Dispose();
             texture = Texture2D.New(GraphicsDevice, img);
             img.Dispose();
             // Handle base.Update
             base.Update(gameTime);
+        }
+
+        protected void paintCapitals(Image img)
+        {
+            foreach (Civ empire in MainModel.Instance.Civilizations)
+            {
+                int x = empire.Capital.X;
+                int y = empire.Capital.Y;
+                for(int i=x-3;i<=x+3;i++)
+                    for(int j=y-3;j<=y+3;j++)
+                        if(isInBounds(img, i, j)) 
+                        {
+                            if(i>x-2&&i<x+2&&j>y-2&&j<y+2)
+                                img.PixelBuffer[0].SetPixel<Color>(i, j, new Color(255, 255, 255));
+                            else
+                                img.PixelBuffer[0].SetPixel<Color>(i, j, new Color(0, 0, 255));
+                        }
+                img.PixelBuffer[0].SetPixel<Color>(x, y, new Color(0, 0, 255));
+            }
+        }
+
+        protected bool isInBounds(Image img, int i, int j)
+        {
+            if (i < 0 || j < 0 || i > img.PixelBuffer[0].Width - 1 || i > img.PixelBuffer[0].Height - 1)
+                return false;
+            return true;
         }
 
         protected override void Draw(GameTime gameTime)
