@@ -58,11 +58,20 @@ namespace Civilization.ViewModels
                 //System.Console.WriteLine("Starting column " + i);
                 for (int j = 0; j < img.PixelBuffer[0].Height; j++)
                 {
-                    if (cells[i][j].isReachable())
-                    {
-                        if (cells[i][j].getOwner() != null)
-                            img.PixelBuffer[0].SetPixel<Color>(i, j, cells[i][j].getOwner().getColor());
+                    if (cells[i][j].isReachable()) {
+                        if (cells[i][j].getOwner() != null) {
+                            bool bInternal = true;
+                            foreach (Cell theCell in cells[i][j].getNeighbours())
+                                if (theCell.getOwner() != cells[i][j].getOwner()||!theCell.isReachable()) {
+                                    bInternal = false;
+                                    break;
+                                }
+                            if(bInternal)
+                                img.PixelBuffer[0].SetPixel<Color>(i, j, cells[i][j].getOwner().getColor());
+                            else
+                                img.PixelBuffer[0].SetPixel<Color>(i, j, new Color(255,0,0));
 
+                        }
                     }
                 }
             }
