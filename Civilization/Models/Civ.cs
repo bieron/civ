@@ -9,6 +9,13 @@ namespace Civilization.Models
         private Color color;
         private int landCells;
         private long landCellsdt;
+        private double strength;
+        private double landDesirability;
+
+        public double Strength
+        {
+            get { return strength; }
+        }
 
         public int LandCells
         {
@@ -20,9 +27,13 @@ namespace Civilization.Models
             get { return landCellsdt; }
         }
 
-        public void gainedLandCell()
+        public void gainedCell(Cell cell)
         {
-            landCells++;
+            if (cell.IsReachable)
+            {
+                landCells++;
+                landDesirability += cell.Desirability;
+            }
         }
 
         public void lostCapital()
@@ -35,9 +46,13 @@ namespace Civilization.Models
             }
         }
 
-        public void lostLandCell()
+        public void lostCell(Cell cell)
         {
-            landCells--;
+            if (cell.IsReachable)
+            {
+                landCells--;
+                landDesirability -= cell.Desirability;
+            }
         }
 
         public void endOfTick()
@@ -45,6 +60,7 @@ namespace Civilization.Models
             landCellsdt += landCells;
             if (capital.Owner != this)
                 lostCapital();
+            calculateStrength();
         }
 
         public Cell Capital
@@ -63,6 +79,11 @@ namespace Civilization.Models
             this.name = name;
             this.color = color;
             this.capital.Owner = this;
+        }
+
+        public void calculateStrength()
+        {
+            strength = landCells * landDesirability + 0.1 * landCellsdt;
         }
     }
 }

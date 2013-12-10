@@ -95,7 +95,7 @@ namespace Civilization.Models
                         {
                             if (reachable)
                             {
-                                if (MainModel.Instance.Random.Next((int)(owner.LandCellsdt + neighbour.Owner.LandCellsdt)) <= 0.05 * neighbour.Owner.LandCellsdt)
+                                if (MainModel.Instance.Random.NextDouble() <= 0.05 * (neighbour.Owner.Strength/(owner.Strength+neighbour.Owner.Strength)))
                                 {
                                     newOwner = neighbour.Owner;
                                     return;
@@ -103,7 +103,7 @@ namespace Civilization.Models
                             }
                             else
                             {
-                                if (MainModel.Instance.Random.Next((int)(owner.LandCellsdt + neighbour.Owner.LandCellsdt)) <= 0.01 * neighbour.Owner.LandCellsdt)
+                                if (MainModel.Instance.Random.NextDouble() <= 0.01 * (neighbour.Owner.Strength / (owner.Strength + neighbour.Owner.Strength)))
                                 {
                                     newOwner = neighbour.Owner;
                                     return;
@@ -118,9 +118,9 @@ namespace Civilization.Models
         public void ChangeOwner()
         {
             if (owner != null)
-                owner.lostLandCell();
+                owner.lostCell(this);
             if (newOwner != null)
-                newOwner.gainedLandCell();
+                newOwner.gainedCell(this);
             owner = newOwner;
             newOwner = null;
         }
