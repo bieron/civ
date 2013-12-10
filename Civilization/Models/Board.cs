@@ -1,114 +1,178 @@
 ﻿using System.Windows.Controls;
 using System.Drawing;
-namespace Civilization.Models {
-    class Board {
-        Cell[][] cells;
-        int height, width;
-        Bitmap terrainBMP;
-        public Board(string mapTitle) {
-            terrainBMP = new Bitmap(@"..\..\Resources\" + mapTitle + @"\terrain.bmp");
-            height = terrainBMP.Height;
-            width = terrainBMP.Width;
-            createCells();
-            initializeNeighbours();
-            initializeCells();
+
+namespace Civilization.Models
+{
+    internal class Board
+    {
+        private Cell[][] cells;
+        private readonly int height;
+        private readonly int width;
+
+        public Cell[][] Cells
+        {
+            get { return cells; }
         }
 
-        private void createCells() {
-            //nie jestem pewien czy tak się inicjalizuje tablice 2D :P
+        public int Height
+        {
+            get { return height; }
+        }
+
+        public int Width
+        {
+            get { return width; }
+        }
+
+        public Board(string mapTitle)
+        {
+            Bitmap terrainBmp = new Bitmap(@"..\..\Resources\" + mapTitle + @"\terrain.bmp");
+            height = terrainBmp.Height;
+            width = terrainBmp.Width;
+            CreateCells();
+            InitializeNeighbours();
+            InitializeCells();
+        }
+
+        private void CreateCells()
+        {
             cells = new Cell[width][];
             for (int i = 0; i < width; i++)
             {
-                cells[i]=new Cell[height];
+                cells[i] = new Cell[height];
             }
 
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    cells[i][j]=new Cell(i, j);
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    cells[i][j] = new Cell(i, j);
                 }
             }
         }
 
-        private void initializeNeighbours() {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    if (i - 1 >= 0 && i + 1 < width && j - 1 >= 0 && j + 1 < height) { //komórki niegraniczne
-                        cells[i][j].addNeighbour(cells[i - 1][j - 1]); //NW
-                        cells[i][j].addNeighbour(cells[i - 1][j]); //W
-                        cells[i][j].addNeighbour(cells[i - 1][j + 1]); //SW
-                        cells[i][j].addNeighbour(cells[i][j - 1]); //N
-                        cells[i][j].addNeighbour(cells[i][j + 1]); //S
-                        cells[i][j].addNeighbour(cells[i + 1][j - 1]); //NE
-                        cells[i][j].addNeighbour(cells[i + 1][j]); //E
-                        cells[i][j].addNeighbour(cells[i + 1][j + 1]); //SE
+        private void InitializeNeighbours()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (IsInnerCell(i, j))
+                    {
+                        AddNeighborsForInnerCell(i, j);
                     }
-                    else { // komórki graniczne
-                        if (i - 1 >= 0) {
-                            if (j - 1 >= 0) { //NW
-                                cells[i][j].addNeighbour(cells[i - 1][j - 1]);
-                            }
-                            cells[i][j].addNeighbour(cells[i - 1][j]); //W
-                            if (j + 1 < height) { //SW
-                                cells[i][j].addNeighbour(cells[i - 1][j + 1]);
-                            }
-                        }
-                        if (j - 1 >= 0) { //N
-                            cells[i][j].addNeighbour(cells[i][j - 1]);
-                        }
-                        if (j + 1 < height) { //S
-                            cells[i][j].addNeighbour(cells[i][j + 1]);
-                        }
-                        if (i + 1 < width) {
-                            if (j - 1 >= 0) { //NE
-                                cells[i][j].addNeighbour(cells[i + 1][j - 1]);
-                            }
-                            cells[i][j].addNeighbour(cells[i + 1][j]); //E
-                            if (j + 1 < height) { //SE
-                                cells[i][j].addNeighbour(cells[i + 1][j + 1]);
-                            }
-                        }
+                    else
+                    {
+                        AddNeighborsForBorderCell(i, j);
                     }
                 }
             }
         }
 
-        private void initializeCells() {
+        private bool IsInnerCell(int col, int row)
+        {
+            return col - 1 >= 0 && col + 1 < width && row - 1 >= 0 && row + 1 < height;
+        }
+
+        private void AddNeighborsForInnerCell(int col, int row)
+        {
+            cells[col][row].AddNeighbour(cells[col - 1][row - 1]); //NW
+            cells[col][row].AddNeighbour(cells[col - 1][row]); //W
+            cells[col][row].AddNeighbour(cells[col - 1][row + 1]); //SW
+            cells[col][row].AddNeighbour(cells[col][row - 1]); //N
+            cells[col][row].AddNeighbour(cells[col][row + 1]); //S
+            cells[col][row].AddNeighbour(cells[col + 1][row - 1]); //NE
+            cells[col][row].AddNeighbour(cells[col + 1][row]); //E
+            cells[col][row].AddNeighbour(cells[col + 1][row + 1]); //SE
+        }
+
+        private void AddNeighborsForBorderCell(int col, int row)
+        {
+            if (col - 1 >= 0)
+            {
+                if (row - 1 >= 0)
+                {
+                    cells[col][row].AddNeighbour(cells[col - 1][row - 1]); //NW
+                }
+                cells[col][row].AddNeighbour(cells[col - 1][row]); // W
+                if (row + 1 < height)
+                {
+                    cells[col][row].AddNeighbour(cells[col - 1][row + 1]); //SW
+                }
+            }
+
+            if (row - 1 >= 0)
+            {
+                cells[col][row].AddNeighbour(cells[col][row - 1]); //N
+            }
+            if (row + 1 < height)
+            {
+                cells[col][row].AddNeighbour(cells[col][row + 1]); //S
+            }
+
+            if (col + 1 < width)
+            {
+                if (row - 1 >= 0)
+                {
+                    cells[col][row].AddNeighbour(cells[col + 1][row - 1]); //NE
+                }
+                cells[col][row].AddNeighbour(cells[col + 1][row]); //E
+                if (row + 1 < height)
+                {
+                    cells[col][row].AddNeighbour(cells[col + 1][row + 1]); //SE
+                }
+            }
+        }
+
+        private void InitializeCells()
+        {
+            DetermineReachability();
+            DetermineDesirability();
+        }
+
+        private void DetermineReachability()
+        {
             Bitmap landBMP = new Bitmap(@"..\..\Resources\EgyptMap\land.bmp");
             for (int i = 0; i < landBMP.Width; i++)
                 for (int j = 0; j < landBMP.Height; j++)
                     if (landBMP.GetPixel(i, j).R == 0)
-                        cells[i][j].setUnreachable();
-            Bitmap desBMP = new Bitmap(@"..\..\Resources\EgyptMap\desirability.bmp");
-            for (int i = 0; i < landBMP.Width; i++)
-                for (int j = 0; j < landBMP.Height; j++)
-                    cells[i][j].setDesirability(desBMP.GetPixel(i, j).R);
+                        cells[i][j].SetUnreachable();
         }
 
-        public void tick()
+        private void DetermineDesirability()
         {
-            //System.Console.WriteLine("Tick!");
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    cells[i][j].calculateNewOwner();
+            Bitmap desBMP = new Bitmap(@"..\..\Resources\EgyptMap\desirability.bmp");
+            for (int i = 0; i < desBMP.Width; i++)
+                for (int j = 0; j < desBMP.Height; j++)
+                    cells[i][j].Desirability = desBMP.GetPixel(i, j).R;
+        }
+
+        public void Tick()
+        {
+            DetermineNewOwnerForAllCells();
+            ChangeOwnerForAllCells();
+        }
+
+        private void DetermineNewOwnerForAllCells()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    cells[i][j].CalculateNewOwner();
                 }
             }
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    cells[i][j].changeOwner();
+        }
+
+        private void ChangeOwnerForAllCells()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    cells[i][j].ChangeOwner();
                 }
             }
-        }
-
-        public Cell[][] getCells() {
-            return cells;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
         }
     }
 }

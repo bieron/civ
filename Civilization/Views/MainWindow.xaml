@@ -12,12 +12,13 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" />
-            <ColumnDefinition MinWidth="200"  Width="Auto" />
+            <ColumnDefinition MinWidth="200" Width="Auto" />
         </Grid.ColumnDefinitions>
         <views:PaintingView Game="{Binding Game}" />
         <Grid Grid.Column="1">
             <Label Content="{Binding Text}" />
-            <Button Content="Button" HorizontalAlignment="Left" Margin="44,90,0,0" VerticalAlignment="Top" Width="75" Command="{Binding Send}"/>
+            <Button Content="Button" HorizontalAlignment="Left" Margin="44,90,0,0" VerticalAlignment="Top" Width="75"
+                    Command="{Binding Send}" />
         </Grid>
     </Grid>
 </Window>

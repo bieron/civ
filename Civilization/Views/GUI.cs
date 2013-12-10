@@ -1,5 +1,6 @@
-﻿namespace Civilization.Views {
-    class GUI {
-
+﻿namespace Civilization.Views
+{
+    internal class GUI
+    {
     }
 }

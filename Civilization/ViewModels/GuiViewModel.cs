@@ -7,7 +7,7 @@ namespace Civilization.ViewModels
 {
     public class GuiViewModel : ObservableObject
     {
-        private readonly ICommand _sendCommand = new RelayCommand<object>(delegate { Console.WriteLine("cos"); });
+        private readonly ICommand _sendCommand = new RelayCommand<object>(delegate { Console.WriteLine("przycisk"); });
         private Game _game = new Scene();
 
         public ICommand Send
@@ -17,13 +17,14 @@ namespace Civilization.ViewModels
 
         public Game Game
         {
-            get { return _game;  }
+            get { return _game; }
             set
             {
                 _game = value;
                 RaisePropertyChanged("Game");
             }
         }
+
         public string Text
         {
             get { return "cos"; }

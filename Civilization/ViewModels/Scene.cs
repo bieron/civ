@@ -1,19 +1,12 @@
 ﻿using System;
-
 using SharpDX;
 using SharpDX.Toolkit;
 
 namespace Civilization.ViewModels
 {
-    // Use this namespace here in case we need to use Direct3D11 namespace as well, as this
-    // namespace will override the Direct3D11.
     using SharpDX.Toolkit.Graphics;
     using Civilization.Models;
 
-    /// <summary>
-    /// Simple MiniCube application using SharpDX.Toolkit.
-    /// The purpose of this application is to show a rotating cube using <see cref="BasicEffect"/>.
-    /// </summary>
     public class Scene : Game
     {
         private GraphicsDeviceManager graphicsDeviceManager;
@@ -21,12 +14,8 @@ namespace Civilization.ViewModels
         private Texture2D savedTexture;
         private VertexInputLayout inputLayout;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Scene" /> class.
-        /// </summary>
         public Scene()
         {
-            // Creates a graphics manager. This is mandatory.
             graphicsDeviceManager = new GraphicsDeviceManager(this);
 
             // Setup the relative directory to the executable directory
@@ -37,22 +26,19 @@ namespace Civilization.ViewModels
         protected override void LoadContent()
         {
             savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
-            
             base.LoadContent();
         }
 
         protected override void Initialize()
         {
-            Window.Title = "MiniCube demo";
-
             base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            MainModel.getInstance().getBoard().tick();
+            MainModel.Instance.GameBoard.Tick();
             Image img = savedTexture.GetDataAsImage();
-            Cell[][] cells = MainModel.getInstance().getBoard().getCells();
+            Cell[][] cells = MainModel.Instance.GameBoard.Cells;
             for (int i = 0; i < img.PixelBuffer[0].Width; i++)
             {
                 //System.Console.WriteLine("Starting column " + i);
@@ -71,11 +57,10 @@ namespace Civilization.ViewModels
                             else
                                 img.PixelBuffer[0].SetPixel<Color>(i, j, new Color(255,0,0));
 
-                        }
                     }
                 }
             }
-            if(texture!=null)
+            if (texture != null)
                 texture.Dispose();
             texture = Texture2D.New(GraphicsDevice, img);
             img.Dispose();
