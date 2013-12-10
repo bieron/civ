@@ -71,7 +71,7 @@ namespace Civilization.Models
         //parametry
         private const bool debug = true;
         private const int waterCost = 5;
-        private const int stopValue = 10000; //tak sobie eksperymentalnie dobrałem
+        private const int stopValue = 20000; //tak sobie eksperymentalnie dobrałem
 
         public AStarCalculator(Cell from, Cell to)
         {

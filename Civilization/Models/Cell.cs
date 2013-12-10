@@ -66,16 +66,50 @@ namespace Civilization.Models
 
         public void CalculateNewOwner()
         {
-            if (!reachable)
-                newOwner = null;
+            //if (!reachable)
+            //    newOwner = null;
             //to tylko testy
+
             foreach (Cell neighbour in neighbors)
             {
-                if (neighbour.Owner != null && owner == null)
-                    if (MainModel.Instance.Random.Next(255) <= desirability + 5)
+                if (neighbour.Owner != null)
+                    if (owner == null)
                     {
-                        newOwner = neighbour.Owner;
-                        return;
+                        if (!reachable)
+                        {
+                            if (MainModel.Instance.Random.Next(255) <= desirability + 10)
+                            {
+                                newOwner = neighbour.Owner;
+                                return;
+                            }
+                        }
+                        else if (MainModel.Instance.Random.Next(255) <= desirability + 5)
+                        {
+                            newOwner = neighbour.Owner;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (neighbour.Owner != owner)
+                        {
+                            if (reachable)
+                            {
+                                if (MainModel.Instance.Random.Next((int)(owner.LandCellsdt + neighbour.Owner.LandCellsdt)) <= 0.05 * neighbour.Owner.LandCellsdt)
+                                {
+                                    newOwner = neighbour.Owner;
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (MainModel.Instance.Random.Next((int)(owner.LandCellsdt + neighbour.Owner.LandCellsdt)) <= 0.01 * neighbour.Owner.LandCellsdt)
+                                {
+                                    newOwner = neighbour.Owner;
+                                    return;
+                                }
+                            }
+                        }
                     }
             }
             newOwner = owner;
@@ -83,6 +117,10 @@ namespace Civilization.Models
 
         public void ChangeOwner()
         {
+            if (owner != null)
+                owner.lostLandCell();
+            if (newOwner != null)
+                newOwner.gainedLandCell();
             owner = newOwner;
             newOwner = null;
         }

@@ -151,6 +151,14 @@ namespace Civilization.Models
         {
             DetermineNewOwnerForAllCells();
             ChangeOwnerForAllCells();
+            UpdateCivs();
+            MainModel.Instance.endOfTick();
+        }
+
+        private void UpdateCivs()
+        {
+            foreach (Civ civ in MainModel.Instance.Civilizations)
+                civ.endOfTick();
         }
 
         private void DetermineNewOwnerForAllCells()
@@ -173,6 +181,20 @@ namespace Civilization.Models
                     cells[i][j].ChangeOwner();
                 }
             }
+        }
+
+        public Cell pickBestCapitalFor(Civ empire)
+        {
+            Cell bestCell = null;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if(cells[i][j].IsReachable&&cells[i][j].Owner==empire&&(bestCell==null||cells[i][j].Desirability>bestCell.Desirability))
+                        bestCell = cells[i][j];
+                }
+            }
+            return bestCell;
         }
     }
 }

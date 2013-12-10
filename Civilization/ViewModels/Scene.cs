@@ -106,6 +106,7 @@ namespace Civilization.ViewModels
             SpriteBatch spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null);
             spriteBatch.Draw(texture, Vector2.Zero, Color.White);
+            //spriteBatch.Draw(texture, Vector2.Zero, null, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
             spriteBatch.End();
 
             // Handle base.Draw

@@ -17,6 +17,7 @@ namespace Civilization.Models
             get { return instance ?? (instance = new MainModel()); }
         }
 
+        private List<Civ> deadCivilizations;
         private List<Civ> civilizations;
         private Board gameBoard;
         private Random random;
@@ -40,6 +41,7 @@ namespace Civilization.Models
         {
             gameBoard = new Board("EgyptMap");
             civilizations = new List<Civ>();
+            deadCivilizations = new List<Civ>();
             random = new System.Random();
             //tests
             civilizations.Add(new Civ(gameBoard.Cells[39][21], "Greek Empire", new Color(0, 204, 255)));
@@ -48,9 +50,21 @@ namespace Civilization.Models
             civilizations.Add(new Civ(gameBoard.Cells[264][583], "Some African Empire", new Color(104, 0, 0)));
         }
 
+        public void KillCivilization(Civ empire)
+        {
+            deadCivilizations.Add(empire);
+        }
+
         public void AddCivilization(Civ empire)
         {
             civilizations.Add(empire);
+        }
+
+        public void endOfTick()
+        {
+            foreach (Civ civ in deadCivilizations)
+                civilizations.Remove(civ);
+            deadCivilizations.Clear();
         }
     }
 }
