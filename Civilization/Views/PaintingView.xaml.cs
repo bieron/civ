@@ -22,7 +22,7 @@ namespace Civilization.Views
     public partial class PaintingView : UserControl
     {
         public static readonly DependencyProperty GameProperty = DependencyProperty
-    .Register("Game", typeof(Game), typeof(PaintingView), new FrameworkPropertyMetadata(HandleGameChanged));
+            .Register("Game", typeof (Game), typeof (PaintingView), new FrameworkPropertyMetadata(HandleGameChanged));
 
         private static void HandleGameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -50,6 +50,7 @@ namespace Civilization.Views
                     newGame.Run(element);
             }
         }
+
         public PaintingView()
         {
             InitializeComponent();
@@ -59,7 +60,7 @@ namespace Civilization.Views
 
         public Game Game
         {
-            get { return (Game)GetValue(GameProperty); }
+            get { return (Game) GetValue(GameProperty); }
             set { SetValue(GameProperty, value); }
         }
     }

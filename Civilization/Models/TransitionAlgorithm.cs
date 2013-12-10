@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Civilization.Models {
-    class TransitionAlgorithm {
-        List<TransitionRule> rules;
+namespace Civilization.Models
+{
+    internal class TransitionAlgorithm
+    {
+        private List<TransitionRule> rules;
     }
 }
