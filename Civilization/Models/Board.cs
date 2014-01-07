@@ -183,7 +183,7 @@ namespace Civilization.Models
             }
         }
 
-        public Cell pickBestCapitalFor(Civ empire)
+        public Cell PickBestCapitalFor(Civ empire)
         {
             Cell bestCell = null;
             for (int i = 0; i < width; i++)
