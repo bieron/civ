@@ -45,7 +45,7 @@ namespace Civilization.Models
             CreateCells();
             InitializeNeighbours();
             InitializeCells();
-            useThreads = false;
+            useThreads = true;
             if(useThreads)
                 InitializeThreads();
         }
@@ -191,10 +191,7 @@ namespace Civilization.Models
             //DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height);
             if (useThreads)
             {
-                ULThread.Resume();
-                URThread.Resume();
-                LLThread.Resume();
-                LRThread.Resume();
+                ResumeThreads();
                 while (ULThread.ThreadState != ThreadState.Suspended || URThread.ThreadState != ThreadState.Suspended || LLThread.ThreadState != ThreadState.Suspended || LRThread.ThreadState != ThreadState.Suspended)
                     Thread.Sleep(10);
             }
@@ -203,6 +200,7 @@ namespace Civilization.Models
             ChangeOwnerForAllCells();
             
             UpdateCivs();
+            //ResumeThreads();
             MainModel.Instance.endOfTick();
         }
 
@@ -225,20 +223,30 @@ namespace Civilization.Models
 
         private void ThreadDetermineNewOwner(int fromX, int toX, int fromY, int toY)
         {
+            Random random = new Random();
             while (true)
             {
                 Thread.CurrentThread.Suspend();
-                DetermineNewOwnerForRangeCells(fromX, toX, fromY, toY);
+                DetermineNewOwnerForRangeCells(fromX, toX, fromY, toY, random);
             }
         }
 
-        private void DetermineNewOwnerForRangeCells(int fromX, int toX, int fromY, int toY)
+        public void ResumeThreads()
         {
+            ULThread.Resume();
+            URThread.Resume();
+            LLThread.Resume();
+            LRThread.Resume();
+        }
+        private void DetermineNewOwnerForRangeCells(int fromX, int toX, int fromY, int toY, Random random = null)
+        {
+            if (random == null)
+                random = MainModel.Instance.Random;
             for (int i = fromX; i < toX; i++)
             {
                 for (int j = fromY; j < toY; j++)
                 {
-                    cells[i][j].CalculateNewOwner();
+                    cells[i][j].CalculateNewOwner(random);
                 }
             }
         }

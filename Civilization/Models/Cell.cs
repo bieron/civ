@@ -65,11 +65,10 @@ namespace Civilization.Models
             reachable = true;
         }
 
-        public void CalculateNewOwner()
+        public void CalculateNewOwner(Random random = null)
         {
-            //if (!reachable)
-            //    newOwner = null;
-            //to tylko testy
+            if (random == null)
+                random = MainModel.Instance.Random;
 
             foreach (Cell neighbour in neighbors)
             {
@@ -78,13 +77,13 @@ namespace Civilization.Models
                     {
                         if (!reachable)
                         {
-                            if (MainModel.Instance.Random.Next(255) <= desirability + 10)
+                            if (random.Next(255) <= desirability + 10)
                             {
                                 newOwner = neighbour.Owner;
                                 return;
                             }
                         }
-                        else if (MainModel.Instance.Random.Next(255) <= desirability + 5)
+                        else if (random.Next(255) <= desirability + 5)
                         {
                             newOwner = neighbour.Owner;
                             return;
@@ -98,15 +97,22 @@ namespace Civilization.Models
                             double neighbourStrength = neighbour.Owner.Strength * (Math.Max(((MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height)/10 - DistanceToCapitalOf(neighbour.Owner)), 35) / (MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height));
                             if (reachable)
                             {
-                                if (MainModel.Instance.Random.NextDouble() <= 0.05 * (neighbourStrength / (thisStrength + neighbourStrength)))
+                                double db = random.NextDouble();
+                                if (db <= 0.05 * (neighbourStrength / (thisStrength + neighbourStrength)))
                                 {
+                                    if (db == 0)
+                                        System.Console.WriteLine(db);
                                     newOwner = neighbour.Owner;
                                     return;
+                                }
+                                else
+                                {
+                                    
                                 }
                             }
                             else
                             {
-                                if (MainModel.Instance.Random.NextDouble() <= 0.01 * (neighbourStrength / (thisStrength + neighbourStrength)))
+                                if (random.NextDouble() <= 0.01 * (neighbourStrength / (thisStrength + neighbourStrength)))
                                 {
                                     newOwner = neighbour.Owner;
                                     return;
