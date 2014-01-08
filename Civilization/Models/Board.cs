@@ -15,6 +15,7 @@ namespace Civilization.Models
         private Thread LLThread;
         private Thread LRThread;
         private bool useThreads;
+        private bool bFirstTick;
 
         public bool UseThreads
         {
@@ -46,6 +47,7 @@ namespace Civilization.Models
             InitializeNeighbours();
             InitializeCells();
             useThreads = true;
+            bFirstTick = true;
             if(useThreads)
                 InitializeThreads();
         }
@@ -189,7 +191,11 @@ namespace Civilization.Models
             //DetermineNewOwnerForRangeCells(0, width / 2, height / 2, height);
             //DetermineNewOwnerForRangeCells(width / 2, width, 0, height / 2);
             //DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height);
-            ResumeThreads();
+            if (bFirstTick)
+            {
+                ResumeThreads();
+                bFirstTick = false;
+            }
             if (useThreads)
             {
                 while (ULThread.ThreadState != ThreadState.Suspended || URThread.ThreadState != ThreadState.Suspended || LLThread.ThreadState != ThreadState.Suspended || LRThread.ThreadState != ThreadState.Suspended)
@@ -200,7 +206,7 @@ namespace Civilization.Models
             ChangeOwnerForAllCells();
             
             UpdateCivs();
-            //ResumeThreads();
+            ResumeThreads();
             MainModel.Instance.endOfTick();
         }
 
