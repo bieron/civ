@@ -5,13 +5,13 @@
         xmlns:interop="clr-namespace:System.Windows.Interop;assembly=PresentationCore"
         xmlns:toolkit="clr-namespace:SharpDX.Toolkit;assembly=SharpDX.Toolkit.Game"
         xmlns:views="clr-namespace:Civilization.Views"
-        Title="MainWindow" MinHeight="350" MinWidth="525">
+        Title="MainWindow" MinHeight="638" MaxWidth="625">
     <Window.DataContext>
         <viewModels:GuiViewModel />
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="200" />
+            <ColumnDefinition MinWidth="425" Width="Auto" />
             <ColumnDefinition MinWidth="200" Width="Auto" />
         </Grid.ColumnDefinitions>
         <views:PaintingView Game="{Binding Game}" />

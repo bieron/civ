@@ -165,6 +165,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ColorDistributor.cs" />
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="ViewModels\GuiViewModel.cs" />
     <Compile Include="ViewModels\PaintingViewModel.cs" />

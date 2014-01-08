@@ -12,6 +12,11 @@ namespace Civilization.Models
         private double strength;
         private double landDesirability;
 
+        public string Name
+        {
+            get { return name; }
+        }
+
         public double Strength
         {
             get { return strength; }
@@ -25,6 +30,7 @@ namespace Civilization.Models
         public long LandCellsdt
         {
             get { return landCellsdt; }
+            set { landCellsdt = value; }
         }
 
         public void gainedCell(Cell cell)
@@ -61,6 +67,15 @@ namespace Civilization.Models
             if (capital.Owner != this)
                 lostCapital();
             calculateStrength();
+            long minSplitThresholdLand = 50000;
+            long minSplitThresholdStrength = 1500000;
+            long maxSplitThresholdStrength = 5000000;
+            if (Strength > minSplitThresholdStrength && landCells>minSplitThresholdLand)
+            {
+                double CollapseProbability = (strength - minSplitThresholdStrength) / (maxSplitThresholdStrength - minSplitThresholdStrength);
+                if (MainModel.Instance.Random.NextDouble() < CollapseProbability)
+                    MainModel.Instance.SplitCivilization(this);
+            }
         }
 
         public Cell Capital
@@ -79,11 +94,12 @@ namespace Civilization.Models
             this.name = name;
             this.color = color;
             this.capital.Owner = this;
+            gainedCell(capital);
         }
 
         public void calculateStrength()
         {
-            strength = landCells * landDesirability + 0.1 * landCellsdt;
+            strength = landCells * (landDesirability/landCells) + 0.1 * landCellsdt;
         }
     }
 }

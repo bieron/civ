@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Drawing;
+using System;
 
 namespace Civilization.Models
 {
@@ -194,7 +195,29 @@ namespace Civilization.Models
                         bestCell = cells[i][j];
                 }
             }
-            return bestCell;
+            return bestCell; 
+        }
+
+        public Cell pickRandomCapital(Civ empire, int dist = 0)
+        {
+            Cell newCapital;
+            Random rand = MainModel.Instance.Random;
+            bool isFarEnough = false;
+            do
+            {
+                int x = rand.Next(width);
+                int y = rand.Next(height);
+                newCapital = cells[x][y];
+                isFarEnough = dist != 0 && DistanceCalculator.calculateDistance(empire.Capital, newCapital, DistanceCalculator.CalculationType.CT_PYTHAGORIAN) > dist;
+            } while (!newCapital.IsReachable || newCapital.Owner != empire || !isFarEnough || newCapital == empire.Capital);
+            return newCapital;
+        }
+
+        public bool IsInBounds(int x, int y)
+        {
+            if (x < 0 || x >= width || y < 0 || y >= height)
+                return false;
+            return true;
         }
     }
 }

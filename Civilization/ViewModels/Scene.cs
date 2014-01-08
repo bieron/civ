@@ -36,7 +36,8 @@ namespace Civilization.ViewModels
 
         protected override void Update(GameTime gameTime)
         {
-            MainModel.Instance.GameBoard.Tick();
+            for (int i=0;i<MainModel.Instance.DrawSpeed;i++)
+                MainModel.Instance.GameBoard.Tick();
             Image img = savedTexture.GetDataAsImage();
             Cell[][] cells = MainModel.Instance.GameBoard.Cells;
             for (int i = 0; i < img.PixelBuffer[0].Width; i++)

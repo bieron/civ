@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Civilization.Models
 {
@@ -93,9 +94,11 @@ namespace Civilization.Models
                     {
                         if (neighbour.Owner != owner)
                         {
+                            double thisStrength = owner.Strength * (Math.Max(((MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height)/10 - DistanceToCapitalOf(owner) ), 35)/ (MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height));
+                            double neighbourStrength = neighbour.Owner.Strength * (Math.Max(((MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height)/10 - DistanceToCapitalOf(neighbour.Owner)), 35) / (MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height));
                             if (reachable)
                             {
-                                if (MainModel.Instance.Random.NextDouble() <= 0.05 * (neighbour.Owner.Strength/(owner.Strength+neighbour.Owner.Strength)))
+                                if (MainModel.Instance.Random.NextDouble() <= 0.05 * (neighbourStrength / (thisStrength + neighbourStrength)))
                                 {
                                     newOwner = neighbour.Owner;
                                     return;
@@ -103,7 +106,7 @@ namespace Civilization.Models
                             }
                             else
                             {
-                                if (MainModel.Instance.Random.NextDouble() <= 0.01 * (neighbour.Owner.Strength / (owner.Strength + neighbour.Owner.Strength)))
+                                if (MainModel.Instance.Random.NextDouble() <= 0.01 * (neighbourStrength / (thisStrength + neighbourStrength)))
                                 {
                                     newOwner = neighbour.Owner;
                                     return;
@@ -117,6 +120,11 @@ namespace Civilization.Models
 
         public void ChangeOwner()
         {
+            if (owner == newOwner)
+            {
+                newOwner = null;
+                return;
+            }
             if (owner != null)
                 owner.lostCell(this);
             if (newOwner != null)
@@ -159,8 +167,10 @@ namespace Civilization.Models
 
         public double DistanceTo(Cell cell)
         {
+            if (cell == null)
+                return (MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height);
             //tu można zmienić metodę liczenia dystansu
-            return DistanceCalculator.calculateDistance(this, cell, DistanceCalculator.CalculationType.CT_PYTHAGORIAN2);
+            return DistanceCalculator.calculateDistance(this, cell, DistanceCalculator.CalculationType.CT_PYTHAGORIAN);
         }
 
         public void SetUnreachable()
