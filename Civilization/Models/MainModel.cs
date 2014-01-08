@@ -1,6 +1,7 @@
 ﻿using SharpDX;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,9 @@ namespace Civilization.Models
         private Board gameBoard;
         private Random random;
         private int drawSpeed;
+        private long tickCount;
+        private long last100TicksMilliseconds;
+        private Stopwatch sw;
 
         public int DrawSpeed
         {
@@ -54,6 +58,7 @@ namespace Civilization.Models
             newCivilizations = new List<Civ>();
             random = new System.Random();
             drawSpeed = 1;
+            tickCount = 0;
             colors = new ColorDistributor();
             //tests
             civilizations.Add(new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()));
@@ -66,6 +71,9 @@ namespace Civilization.Models
             civilizations.Add(new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()));
             civilizations.Add(new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()));
             civilizations.Add(new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor()));
+
+            sw=new Stopwatch();
+            sw.Start();
         }
 
         public void KillCivilization(Civ empire)
@@ -83,6 +91,15 @@ namespace Civilization.Models
                 civilizations.Remove(civ);
             deadCivilizations.Clear();
             //System.Console.WriteLine(civilizations[1].Strength);
+            tickCount++;
+            if (tickCount % 100 == 0)
+            {
+                sw.Stop();
+                last100TicksMilliseconds = sw.ElapsedMilliseconds;
+                System.Console.WriteLine("Tick "+tickCount+": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
+                sw = new Stopwatch();
+                sw.Start();
+            }
         }
 
         public void SplitCivilization(Civ empire)

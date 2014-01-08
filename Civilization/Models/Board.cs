@@ -199,7 +199,7 @@ namespace Civilization.Models
             if (useThreads)
             {
                 while (ULThread.ThreadState != ThreadState.Suspended || URThread.ThreadState != ThreadState.Suspended || LLThread.ThreadState != ThreadState.Suspended || LRThread.ThreadState != ThreadState.Suspended)
-                    Thread.Sleep(10);
+                    Thread.Sleep(0);
             }
             else
                 DetermineNewOwnerForAllCells();
