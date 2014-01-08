@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Drawing;
 using System;
+using System.Threading;
 
 namespace Civilization.Models
 {
@@ -9,6 +10,17 @@ namespace Civilization.Models
         private Cell[][] cells;
         private readonly int height;
         private readonly int width;
+        private Thread ULThread;
+        private Thread URThread;
+        private Thread LLThread;
+        private Thread LRThread;
+        private bool useThreads;
+
+        public bool UseThreads
+        {
+            get { return useThreads; }
+        }
+
 
         public Cell[][] Cells
         {
@@ -33,6 +45,9 @@ namespace Civilization.Models
             CreateCells();
             InitializeNeighbours();
             InitializeCells();
+            useThreads = false;
+            if(useThreads)
+                InitializeThreads();
         }
 
         private void CreateCells()
@@ -68,6 +83,26 @@ namespace Civilization.Models
                     }
                 }
             }
+        }
+
+        private void InitializeThreads()
+        {
+            ThreadStart ULThreadStart = delegate { ThreadDetermineNewOwner(0, width / 2, 0, height / 2); };
+            ULThread = new Thread(ULThreadStart);
+            ULThread.Name = "ULThread";
+            ULThread.Start();
+            ThreadStart URThreadStart = delegate { ThreadDetermineNewOwner(0, width / 2, height / 2, height); };
+            URThread = new Thread(URThreadStart);
+            URThread.Name = "URThread";
+            URThread.Start();
+            ThreadStart LLThreadStart = delegate { ThreadDetermineNewOwner(width / 2, width, 0, height / 2); };
+            LLThread = new Thread(LLThreadStart);
+            LLThread.Name = "LLThread";
+            LLThread.Start();
+            ThreadStart LRThreadStart = delegate { ThreadDetermineNewOwner(width / 2, width, height / 2, height); };
+            LRThread = new Thread(LRThreadStart);
+            LRThread.Name = "LRThread";
+            LRThread.Start();
         }
 
         private bool IsInnerCell(int col, int row)
@@ -150,8 +185,23 @@ namespace Civilization.Models
 
         public void Tick()
         {
-            DetermineNewOwnerForAllCells();
+            //DetermineNewOwnerForRangeCells(0, width / 2, 0, height / 2);
+            //DetermineNewOwnerForRangeCells(0, width / 2, height / 2, height);
+            //DetermineNewOwnerForRangeCells(width / 2, width, 0, height / 2);
+            //DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height);
+            if (useThreads)
+            {
+                ULThread.Resume();
+                URThread.Resume();
+                LLThread.Resume();
+                LRThread.Resume();
+                while (ULThread.ThreadState != ThreadState.Suspended || URThread.ThreadState != ThreadState.Suspended || LLThread.ThreadState != ThreadState.Suspended || LRThread.ThreadState != ThreadState.Suspended)
+                    Thread.Sleep(10);
+            }
+            else
+                DetermineNewOwnerForAllCells();
             ChangeOwnerForAllCells();
+            
             UpdateCivs();
             MainModel.Instance.endOfTick();
         }
@@ -173,6 +223,25 @@ namespace Civilization.Models
             }
         }
 
+        private void ThreadDetermineNewOwner(int fromX, int toX, int fromY, int toY)
+        {
+            while (true)
+            {
+                Thread.CurrentThread.Suspend();
+                DetermineNewOwnerForRangeCells(fromX, toX, fromY, toY);
+            }
+        }
+
+        private void DetermineNewOwnerForRangeCells(int fromX, int toX, int fromY, int toY)
+        {
+            for (int i = fromX; i < toX; i++)
+            {
+                for (int j = fromY; j < toY; j++)
+                {
+                    cells[i][j].CalculateNewOwner();
+                }
+            }
+        }
         private void ChangeOwnerForAllCells()
         {
             for (int i = 0; i < width; i++)

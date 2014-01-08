@@ -47,6 +47,7 @@ namespace Civilization.Models
 
         protected MainModel()
         {
+            System.Console.WriteLine("MainModel begin");
             gameBoard = new Board("EgyptMap");
             civilizations = new List<Civ>();
             deadCivilizations = new List<Civ>();
