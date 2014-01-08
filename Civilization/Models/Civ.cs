@@ -44,7 +44,7 @@ namespace Civilization.Models
 
         public void lostCapital()
         {
-            capital = MainModel.Instance.GameBoard.pickBestCapitalFor(this);
+            capital = MainModel.Instance.GameBoard.PickBestCapitalFor(this);
             if (capital == null)
             {
                 System.Console.WriteLine(name + " was destroyed!");
