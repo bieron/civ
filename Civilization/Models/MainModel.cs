@@ -82,6 +82,7 @@ namespace Civilization.Models
             foreach (Civ civ in deadCivilizations)
                 civilizations.Remove(civ);
             deadCivilizations.Clear();
+            gameBoard.ResumeThreads();
             //System.Console.WriteLine(civilizations[1].Strength);
         }
 

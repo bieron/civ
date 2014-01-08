@@ -189,9 +189,9 @@ namespace Civilization.Models
             //DetermineNewOwnerForRangeCells(0, width / 2, height / 2, height);
             //DetermineNewOwnerForRangeCells(width / 2, width, 0, height / 2);
             //DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height);
+            ResumeThreads();
             if (useThreads)
             {
-                ResumeThreads();
                 while (ULThread.ThreadState != ThreadState.Suspended || URThread.ThreadState != ThreadState.Suspended || LLThread.ThreadState != ThreadState.Suspended || LRThread.ThreadState != ThreadState.Suspended)
                     Thread.Sleep(10);
             }
@@ -233,6 +233,8 @@ namespace Civilization.Models
 
         public void ResumeThreads()
         {
+            if (!useThreads)
+                return;
             ULThread.Resume();
             URThread.Resume();
             LLThread.Resume();
