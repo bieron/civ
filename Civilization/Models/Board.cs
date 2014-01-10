@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Drawing;
 using System;
 using System.Threading;
@@ -10,12 +11,13 @@ namespace Civilization.Models
         private Cell[][] cells;
         private readonly int height;
         private readonly int width;
-        private Thread ULThread;
-        private Thread URThread;
-        private Thread LLThread;
-        private Thread LRThread;
+        private Task ULTask;
+        private Task URTask;
+        private Task LLTask;
+        private Task LRTask;
         private bool useThreads;
         private bool bFirstTick;
+        private Random[] randomsForTasks;
 
         public bool UseThreads
         {
@@ -48,8 +50,25 @@ namespace Civilization.Models
             InitializeCells();
             useThreads = true;
             bFirstTick = true;
-            if(useThreads)
-                InitializeThreads();
+
+            if (useThreads)
+            {
+                randomsForTasks = new Random[4];   
+                for(int i = 0; i < randomsForTasks.Length; ++i)
+                    randomsForTasks[i] = new Random();
+            }
+        }
+
+        public void Reset()
+        {
+            foreach (Cell[] cellA in cells)
+            {
+                foreach (Cell cell in cellA)
+                {
+                    cell.Clear();
+                }
+            }
+            bFirstTick = true;
         }
 
         private void CreateCells()
@@ -87,24 +106,17 @@ namespace Civilization.Models
             }
         }
 
-        private void InitializeThreads()
+        private void RunTasks()
         {
-            ThreadStart ULThreadStart = delegate { ThreadDetermineNewOwner(0, width / 2, 0, height / 2); };
-            ULThread = new Thread(ULThreadStart);
-            ULThread.Name = "ULThread";
-            ULThread.Start();
-            ThreadStart URThreadStart = delegate { ThreadDetermineNewOwner(0, width / 2, height / 2, height); };
-            URThread = new Thread(URThreadStart);
-            URThread.Name = "URThread";
-            URThread.Start();
-            ThreadStart LLThreadStart = delegate { ThreadDetermineNewOwner(width / 2, width, 0, height / 2); };
-            LLThread = new Thread(LLThreadStart);
-            LLThread.Name = "LLThread";
-            LLThread.Start();
-            ThreadStart LRThreadStart = delegate { ThreadDetermineNewOwner(width / 2, width, height / 2, height); };
-            LRThread = new Thread(LRThreadStart);
-            LRThread.Name = "LRThread";
-            LRThread.Start();
+            ULTask = Task.Run(() => DetermineNewOwnerForRangeCells(0, width/2, 0, height/2, randomsForTasks[0]));
+            URTask = Task.Run(() => DetermineNewOwnerForRangeCells(0, width / 2, height / 2, height, randomsForTasks[1]));
+            LLTask = Task.Run(() => DetermineNewOwnerForRangeCells(width / 2, width, 0, height / 2, randomsForTasks[2]));
+            LRTask = Task.Run(() => DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height, randomsForTasks[3]));
+        }
+
+        private void WaitForTasks()
+        {
+            Task.WaitAll(ULTask, URTask, LLTask, LRTask);
         }
 
         private bool IsInnerCell(int col, int row)
@@ -189,21 +201,22 @@ namespace Civilization.Models
         {
             if (bFirstTick)
             {
-                ResumeThreads();
                 bFirstTick = false;
+                if(useThreads)
+                    RunTasks();
             }
             if (useThreads)
-            {
-                while (ULThread.ThreadState != ThreadState.Suspended || URThread.ThreadState != ThreadState.Suspended || LLThread.ThreadState != ThreadState.Suspended || LRThread.ThreadState != ThreadState.Suspended)
-                    Thread.Sleep(0);
-            }
+                WaitForTasks();
             else
                 DetermineNewOwnerForAllCells();
             ChangeOwnerForAllCells();
             
             UpdateCivs();
-            ResumeThreads();
             MainModel.Instance.EndOfTick();
+            if (useThreads)
+            {
+                RunTasks();
+            }
         }
 
         private void UpdateCivs()
@@ -223,25 +236,6 @@ namespace Civilization.Models
             }
         }
 
-        private void ThreadDetermineNewOwner(int fromX, int toX, int fromY, int toY)
-        {
-            Random random = new Random();
-            while (true)
-            {
-                Thread.CurrentThread.Suspend();
-                DetermineNewOwnerForRangeCells(fromX, toX, fromY, toY, random);
-            }
-        }
-
-        public void ResumeThreads()
-        {
-            if (!useThreads)
-                return;
-            ULThread.Resume();
-            URThread.Resume();
-            LLThread.Resume();
-            LRThread.Resume();
-        }
         private void DetermineNewOwnerForRangeCells(int fromX, int toX, int fromY, int toY, Random random = null)
         {
             if (random == null)
@@ -279,7 +273,7 @@ namespace Civilization.Models
             return bestCell; 
         }
 
-        public Cell pickRandomCapital(Civ empire, int dist = 0)
+        public Cell PickRandomCapital(Civ empire, int dist = 0)
         {
             Cell newCapital;
             Random rand = MainModel.Instance.Random;

@@ -65,6 +65,14 @@ namespace Civilization.Models
             reachable = true;
         }
 
+        public void Clear()
+        {
+            owner = null;
+            newOwner = null;
+            if(capitalDistance != null)
+                capitalDistance.Clear();
+        }
+
         public void CalculateNewOwner(Random random = null)
         {
             if (random == null)

@@ -95,6 +95,13 @@ namespace Civilization.Models
             this.color = color;
         }
 
+        public Civ(Civ other)
+        {
+            capital = other.capital;
+            name = other.name;
+            color = other.color;
+        }
+
         public void SettleCiv()
         {
             this.capital.Owner = this;

@@ -1,10 +1,7 @@
-﻿using SharpDX;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Civilization.Models
 {
@@ -82,17 +79,22 @@ namespace Civilization.Models
 
         public void Start(int civsCount)
         {
-            civilizations.Clear();
-
             for (int i = 0; i < civsCount; ++i)
             {
-                civilizations.Add(predefinedCivilizations[i]);
-                predefinedCivilizations[i].SettleCiv();
+                Civ newCiv = new Civ(predefinedCivilizations[i]);
+                civilizations.Add(newCiv);
+                newCiv.SettleCiv();
             }
         }
 
         public void Reset()
         {
+            tickCount = 0;
+            colors.AddColors(predefinedCivilizations.Select(p => p.Color));
+            civilizations.Clear();
+            newCivilizations.Clear();
+            deadCivilizations.Clear();
+
             gameBoard.Reset();
         }
 
@@ -110,7 +112,7 @@ namespace Civilization.Models
             foreach (Civ civ in deadCivilizations)
                 civilizations.Remove(civ);
             deadCivilizations.Clear();
-            Debug.WriteLine(civilizations[1].Strength);
+            //Debug.WriteLine(civilizations[1].Strength);
             tickCount++;
             if (tickCount % 100 == 0)
             {
@@ -125,7 +127,7 @@ namespace Civilization.Models
         public void SplitCivilization(Civ empire)
         {
             Trace.WriteLine("Civilization split!");
-            Civ newEmpire = new Civ(gameBoard.pickRandomCapital(empire, 75), empire.Name+random.Next(255), colors.GetNextColor());
+            Civ newEmpire = new Civ(gameBoard.PickRandomCapital(empire, 75), empire.Name+random.Next(255), colors.GetNextColor());
             newEmpire.SettleCiv();
             newEmpire.LandCellsdt = (empire.LandCellsdt / 10) * 7;
             empire.LandCellsdt = (empire.LandCellsdt / 10) * 2;

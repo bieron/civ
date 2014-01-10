@@ -13,12 +13,12 @@ namespace Civilization.ViewModels
         private int civsCount;
         private int simulationSpeed;
         private string toggleStartEnd;
-        private readonly ICommand startEndCommandCommand;
+        private readonly ICommand startEndCommand;
         private string togglePauseResume;
         private readonly ICommand pauseResumeCommand;
         private readonly ICommand resetCommand;
         private bool isNotRunning;
-        private bool isPaused;
+        private bool isNotPaused;
 
         public Scene Game
         {
@@ -62,7 +62,7 @@ namespace Civilization.ViewModels
 
         public ICommand StartEndCommand
         {
-            get { return startEndCommandCommand; }
+            get { return startEndCommand; }
         }
 
         public String TogglePauseResume
@@ -95,6 +95,7 @@ namespace Civilization.ViewModels
                 RaisePropertyChanged("IsRunning");
             }
         }
+
         public bool IsRunning
         {
             get { return !isNotRunning; }
@@ -106,46 +107,68 @@ namespace Civilization.ViewModels
             }
         }
 
+        public bool IsNotPaused
+        {
+            get { return isNotPaused; }
+            set
+            {
+                isNotPaused = value;
+                RaisePropertyChanged("IsNotPaused");
+            }
+        }
+
         public GuiViewModel()
         {
             isNotRunning = true;
-            TogglePauseResume = "Pause";
+            isNotPaused = true;
             SimulationSpeed = 50;
             CivsCount = 2;
-            startEndCommandCommand = new RelayCommand<object>(delegate
+
+            TogglePauseResume = "Pause";
+            ToggleStartEnd = "Start";
+
+            startEndCommand = new RelayCommand<object>(StartEnd);
+            pauseResumeCommand = new RelayCommand<object>(PauseResume);
+            resetCommand = new RelayCommand<object>(Reset);
+        }
+
+        private void StartEnd(object obj)
+        {
+            if (toggleStartEnd.Equals("Start"))
             {
-                if (toggleStartEnd.Equals("Start"))
-                {
-                    IsRunning = true;
-                    MainModel.Instance.Start(civsCount);
-                    game.Start();
-                }
-                else
-                {
-                    IsRunning = false;
-                    MainModel.Instance.Reset();
-                }
-            });
-            pauseResumeCommand = new RelayCommand<object>(delegate
+                ToggleStartEnd = "Stop";
+                IsRunning = true;
+                MainModel.Instance.Start(civsCount);
+                game.RunSimulation();
+            }
+            else
             {
-                if (togglePauseResume.Equals("Pause"))
-                {
-                    TogglePauseResume = "Resume";
-                    game.Stop();
-                    isPaused = true;
-                }
-                else
-                {
-                    TogglePauseResume = "Pause";
-                    game.Start();
-                    isPaused = false;
-                }
-            });
-            resetCommand = new RelayCommand<object>(delegate
+                ToggleStartEnd = "Start";
+                Reset(obj);
+            }
+        }
+
+        private void PauseResume(object obj)
+        {
+            if (togglePauseResume.Equals("Pause"))
             {
-                IsRunning = false;
-                MainModel.Instance.Reset();
-            });
+                IsNotPaused = false;
+                TogglePauseResume = "Resume";
+                game.StopSimulation();
+            }
+            else
+            {
+                IsNotPaused = true;
+                TogglePauseResume = "Pause";
+                game.RunSimulation();
+            }
+        }
+
+        private void Reset(object obj)
+        {
+            IsRunning = false;
+            game.StopSimulation();
+            MainModel.Instance.Reset();
         }
     }
 }

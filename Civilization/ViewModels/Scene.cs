@@ -67,7 +67,6 @@ namespace Civilization.ViewModels
             Cell[][] cells = MainModel.Instance.GameBoard.Cells;
             for (int i = 0; i < img.PixelBuffer[0].Width; i++)
             {
-                //System.Console.WriteLine("Starting column " + i);
                 for (int j = 0; j < img.PixelBuffer[0].Height; j++)
                 {
                     if (!cells[i][j].IsReachable || cells[i][j].Owner == null) continue;
@@ -107,7 +106,7 @@ namespace Civilization.ViewModels
 
         protected bool IsInBounds(Image img, int i, int j)
         {
-            if (i < 0 || j < 0 || i > img.PixelBuffer[0].Width - 1 || i > img.PixelBuffer[0].Height - 1)
+            if (i < 0 || j < 0 || i > img.PixelBuffer[0].Width - 1 || j > img.PixelBuffer[0].Height - 1)
                 return false;
             return true;
         }
