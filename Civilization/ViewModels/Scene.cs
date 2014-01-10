@@ -35,7 +35,6 @@ namespace Civilization.ViewModels
 
         protected override void LoadContent()
         {
-            //return;
             savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
             base.LoadContent();
         }

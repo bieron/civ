@@ -10,22 +10,10 @@ namespace Civilization.ViewModels
         private Scene game = new Scene();
 
         private string toggleStartStop;
+        private int civsCount;
+        private int simulationSpeed;
         private readonly ICommand startStopCommand;
-
-        public String ToggleStartStop
-        {
-            get { return toggleStartStop; }
-            set
-            {
-                toggleStartStop = value;
-                RaisePropertyChanged("ToggleStartStop");
-            }
-        }
-
-        public ICommand StartStop
-        {
-            get { return startStopCommand; }
-        }
+        private bool isNotRunning;
 
         public Scene Game
         {
@@ -37,20 +25,70 @@ namespace Civilization.ViewModels
             }
         }
 
+        public String ToggleStartStop
+        {
+            get { return toggleStartStop; }
+            set
+            {
+                toggleStartStop = value;
+                RaisePropertyChanged("ToggleStartStop");
+            }
+        }
+
+        public int CivsCount
+        {
+            get { return civsCount; }
+            set
+            {
+                civsCount = value;
+                RaisePropertyChanged("CivsCount");
+            }
+        }
+
+        public int SimulationSpeed
+        {
+            get { return simulationSpeed; }
+            set
+            {
+                simulationSpeed = value;
+                RaisePropertyChanged("SimulationSpeed");
+            }
+        }
+
+        public ICommand StartStop
+        {
+            get { return startStopCommand; }
+        }
+
+        public bool IsNotRunning
+        {
+            get { return isNotRunning; }
+            set
+            {
+                isNotRunning = value;
+                RaisePropertyChanged("IsNotRunning");
+            }
+        }
+
         public GuiViewModel()
         {
-            toggleStartStop = "Start";
+            isNotRunning = true;
+            ToggleStartStop = "Start";
+            SimulationSpeed = 50;
+            CivsCount = 2;
             startStopCommand = new RelayCommand<object>(delegate
             {
                 if (toggleStartStop.Equals("Start"))
                 {
                     ToggleStartStop = "Stop";
                     game.Start();
+                    IsNotRunning = false;
                 }
                 else
                 {
                     ToggleStartStop = "Start";
                     game.Stop();
+                    IsNotRunning = true;
                 }
 
             });

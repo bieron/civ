@@ -90,13 +90,13 @@ namespace Civilization.Models
             foreach (Civ civ in deadCivilizations)
                 civilizations.Remove(civ);
             deadCivilizations.Clear();
-            //System.Console.WriteLine(civilizations[1].Strength);
+            Debug.WriteLine(civilizations[1].Strength);
             tickCount++;
             if (tickCount % 100 == 0)
             {
                 sw.Stop();
                 last100TicksMilliseconds = sw.ElapsedMilliseconds;
-                System.Console.WriteLine("Tick "+tickCount+": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
+                Trace.WriteLine("Tick "+tickCount+": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
                 sw = new Stopwatch();
                 sw.Start();
             }
@@ -104,7 +104,7 @@ namespace Civilization.Models
 
         public void SplitCivilization(Civ empire)
         {
-            System.Console.WriteLine("Civilization split!");
+            Trace.WriteLine("Civilization split!");
             Civ newEmpire = new Civ(gameBoard.pickRandomCapital(empire, 75), empire.Name+random.Next(255), colors.GetNextColor());
             newEmpire.LandCellsdt = (empire.LandCellsdt / 10) * 7;
             empire.LandCellsdt = (empire.LandCellsdt / 10) * 2;

@@ -5,14 +5,14 @@
         xmlns:interop="clr-namespace:System.Windows.Interop;assembly=PresentationCore"
         xmlns:toolkit="clr-namespace:SharpDX.Toolkit;assembly=SharpDX.Toolkit.Game"
         xmlns:views="clr-namespace:Civilization.Views"
-        Title="MainWindow" MinHeight="638" MaxWidth="715">
+        Title="MainWindow" MinHeight="638" MaxWidth="735">
     <Window.DataContext>
         <viewModels:GuiViewModel />
     </Window.DataContext>
     <Grid Background="Silver">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="425" Width="Auto" />
-            <ColumnDefinition MinWidth="270" Width="Auto" />
+            <ColumnDefinition MinWidth="290" Width="Auto" />
         </Grid.ColumnDefinitions>
         <views:PaintingView Game="{Binding Game}" />
         <Border BorderBrush="SlateGray" BorderThickness="1" Grid.Column="1">
@@ -23,18 +23,30 @@
                     <RowDefinition Height="Auto" MinHeight="30"/>
                     <RowDefinition Height="Auto" MinHeight="30"/>
                     <RowDefinition Height="Auto" MinHeight="30"/>
+                    <RowDefinition Height="Auto" MinHeight="30"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Label Content="Ilość cywilizacji: " Grid.Column="0" Grid.Row="0"/>
-                <Label Content="Prędkość symulacji: " Grid.Column="0" Grid.Row="1"/>
-                <Slider Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+                <Label Content="{Binding CivsCount}" ContentStringFormat="Ilość cywilizacji: {0}" Grid.Column="0" Grid.Row="0"/>
+                <Label Content="{Binding SimulationSpeed}" ContentStringFormat="Prędkość symulacji: {0}%" Grid.Column="0" Grid.Row="1"/>
+                <Slider Name="CivsCountSlider" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" IsEnabled="{Binding IsNotRunning}"
+                    Minimum="1"
+                    Maximum="10"
+                    Value="{Binding CivsCount}"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="1"/>
+                <Slider Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"
+                    Minimum="1"
+                    Maximum="100"
+                    Value="{Binding SimulationSpeed}"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="1"/>
                 <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Content="Rysuj stolice" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
                 <CheckBox Grid.Row="3" Grid.ColumnSpan="2" Content="Rysuj granice" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
-                <Button Content="{Binding ToggleStartStop}" Command="{Binding StartStop}" Grid.ColumnSpan="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>
+                <CheckBox Grid.Row="4" Grid.ColumnSpan="2" Content="Rozpady cywilizacji" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
+                <Button Content="{Binding ToggleStartStop}" Command="{Binding StartStop}" Grid.ColumnSpan="2" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>
             </Grid>
         </Border>
     </Grid>
