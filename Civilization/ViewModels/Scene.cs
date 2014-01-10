@@ -13,6 +13,7 @@ namespace Civilization.ViewModels
         private Texture2D texture;
         private Texture2D savedTexture;
         private VertexInputLayout inputLayout;
+        private bool start = false;
 
         public Scene()
         {
@@ -23,19 +24,27 @@ namespace Civilization.ViewModels
             Content.RootDirectory = "Content";
         }
 
+        public void Start()
+        {
+            start = true;
+        }
+
+        public void Stop()
+        {
+            start = false;
+        }
+
         protected override void LoadContent()
         {
+            //return;
             savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
             base.LoadContent();
         }
 
-        protected override void Initialize()
-        {
-            base.Initialize();
-        }
-
         protected override void Update(GameTime gameTime)
         {
+            if (!start)
+                return;
             for (int i=0;i<MainModel.Instance.DrawSpeed;i++)
                 MainModel.Instance.GameBoard.Tick();
             Image img = savedTexture.GetDataAsImage();
@@ -101,6 +110,8 @@ namespace Civilization.ViewModels
 
         protected override void Draw(GameTime gameTime)
         {
+            if (!start)
+                return;
             // Clears the screen with the Color.CornflowerBlue
             GraphicsDevice.Clear(Color.CornflowerBlue);
 

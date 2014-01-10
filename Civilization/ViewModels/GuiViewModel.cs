@@ -7,27 +7,53 @@ namespace Civilization.ViewModels
 {
     public class GuiViewModel : ObservableObject
     {
-        private readonly ICommand _sendCommand = new RelayCommand<object>(delegate { Console.WriteLine("przycisk"); });
-        private Game _game = new Scene();
+        private Scene game = new Scene();
 
-        public ICommand Send
-        {
-            get { return _sendCommand; }
-        }
+        private string toggleStartStop;
+        private readonly ICommand startStopCommand;
 
-        public Game Game
+        public String ToggleStartStop
         {
-            get { return _game; }
+            get { return toggleStartStop; }
             set
             {
-                _game = value;
+                toggleStartStop = value;
+                RaisePropertyChanged("ToggleStartStop");
+            }
+        }
+
+        public ICommand StartStop
+        {
+            get { return startStopCommand; }
+        }
+
+        public Scene Game
+        {
+            get { return game; }
+            set
+            {
+                game = value;
                 RaisePropertyChanged("Game");
             }
         }
 
-        public string Text
+        public GuiViewModel()
         {
-            get { return "cos"; }
+            toggleStartStop = "Start";
+            startStopCommand = new RelayCommand<object>(delegate
+            {
+                if (toggleStartStop.Equals("Start"))
+                {
+                    ToggleStartStop = "Stop";
+                    game.Start();
+                }
+                else
+                {
+                    ToggleStartStop = "Start";
+                    game.Stop();
+                }
+
+            });
         }
     }
 }
