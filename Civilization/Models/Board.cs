@@ -187,10 +187,6 @@ namespace Civilization.Models
 
         public void Tick()
         {
-            //DetermineNewOwnerForRangeCells(0, width / 2, 0, height / 2);
-            //DetermineNewOwnerForRangeCells(0, width / 2, height / 2, height);
-            //DetermineNewOwnerForRangeCells(width / 2, width, 0, height / 2);
-            //DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height);
             if (bFirstTick)
             {
                 ResumeThreads();
@@ -207,13 +203,13 @@ namespace Civilization.Models
             
             UpdateCivs();
             ResumeThreads();
-            MainModel.Instance.endOfTick();
+            MainModel.Instance.EndOfTick();
         }
 
         private void UpdateCivs()
         {
             foreach (Civ civ in MainModel.Instance.Civilizations)
-                civ.endOfTick();
+                civ.EndOfTick();
         }
 
         private void DetermineNewOwnerForAllCells()

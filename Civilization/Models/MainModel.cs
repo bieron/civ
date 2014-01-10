@@ -19,6 +19,7 @@ namespace Civilization.Models
         }
 
         private ColorDistributor colors;
+        private Civ[] predefinedCivilizations;
         private List<Civ> newCivilizations;
         private List<Civ> deadCivilizations;
         private List<Civ> civilizations;
@@ -61,19 +62,38 @@ namespace Civilization.Models
             tickCount = 0;
             colors = new ColorDistributor();
             //tests
-            civilizations.Add(new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[117][181], "Egyptian Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[221][137], "Jewish Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[264][583], "Some African Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[230][39], "Persian Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[169][353], "Kings of the Desert Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[409][522], "Arabian Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()));
-            civilizations.Add(new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor()));
+            predefinedCivilizations = new Civ[]
+            {
+                new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[117][181], "Egyptian Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[221][137], "Jewish Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[264][583], "Some African Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[230][39], "Persian Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[169][353], "Kings of the Desert Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[409][522], "Arabian Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()),
+                new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor())
+            };
 
-            sw=new Stopwatch();
+            sw = new Stopwatch();
             sw.Start();
+        }
+
+        public void Start(int civsCount)
+        {
+            civilizations.Clear();
+
+            for (int i = 0; i < civsCount; ++i)
+            {
+                civilizations.Add(predefinedCivilizations[i]);
+                predefinedCivilizations[i].SettleCiv();
+            }
+        }
+
+        public void Reset()
+        {
+            gameBoard.Reset();
         }
 
         public void KillCivilization(Civ empire)
@@ -82,7 +102,7 @@ namespace Civilization.Models
             colors.AddColor(empire.Color);
         }
 
-        public void endOfTick()
+        public void EndOfTick()
         {
             foreach (Civ civ in newCivilizations)
                 civilizations.Add(civ);
@@ -96,7 +116,7 @@ namespace Civilization.Models
             {
                 sw.Stop();
                 last100TicksMilliseconds = sw.ElapsedMilliseconds;
-                Trace.WriteLine("Tick "+tickCount+": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
+                Trace.WriteLine("Tick " + tickCount + ": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
                 sw = new Stopwatch();
                 sw.Start();
             }
@@ -106,11 +126,12 @@ namespace Civilization.Models
         {
             Trace.WriteLine("Civilization split!");
             Civ newEmpire = new Civ(gameBoard.pickRandomCapital(empire, 75), empire.Name+random.Next(255), colors.GetNextColor());
+            newEmpire.SettleCiv();
             newEmpire.LandCellsdt = (empire.LandCellsdt / 10) * 7;
             empire.LandCellsdt = (empire.LandCellsdt / 10) * 2;
-            empire.lostCell(newEmpire.Capital);
-            newEmpire.calculateStrength();
-            empire.calculateStrength();
+            empire.LostCell(newEmpire.Capital);
+            newEmpire.CalculateStrength();
+            empire.CalculateStrength();
             for(int i=-10;i<=10;i++)
                 for (int j = -10; j <=10; j++)
                 {

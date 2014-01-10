@@ -33,7 +33,7 @@ namespace Civilization.Models
             set { landCellsdt = value; }
         }
 
-        public void gainedCell(Cell cell)
+        public void GainedCell(Cell cell)
         {
             if (cell.IsReachable)
             {
@@ -42,7 +42,7 @@ namespace Civilization.Models
             }
         }
 
-        public void lostCapital()
+        public void LostCapital()
         {
             capital = MainModel.Instance.GameBoard.PickBestCapitalFor(this);
             if (capital == null)
@@ -52,7 +52,7 @@ namespace Civilization.Models
             }
         }
 
-        public void lostCell(Cell cell)
+        public void LostCell(Cell cell)
         {
             if (cell.IsReachable)
             {
@@ -61,12 +61,12 @@ namespace Civilization.Models
             }
         }
 
-        public void endOfTick()
+        public void EndOfTick()
         {
             landCellsdt += landCells;
             if (capital.Owner != this)
-                lostCapital();
-            calculateStrength();
+                LostCapital();
+            CalculateStrength();
             long minSplitThresholdLand = 50000;
             long minSplitThresholdStrength = 1500000;
             long maxSplitThresholdStrength = 5000000;
@@ -93,11 +93,15 @@ namespace Civilization.Models
             this.capital = capital;
             this.name = name;
             this.color = color;
-            this.capital.Owner = this;
-            gainedCell(capital);
         }
 
-        public void calculateStrength()
+        public void SettleCiv()
+        {
+            this.capital.Owner = this;
+            GainedCell(capital);
+        }
+
+        public void CalculateStrength()
         {
             strength = landCells * (landDesirability/landCells) + 0.1 * landCellsdt;
         }

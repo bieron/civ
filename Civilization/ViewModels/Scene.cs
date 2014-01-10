@@ -1,5 +1,7 @@
-﻿using SharpDX;
+﻿//#define DESIGN_MODE
+using SharpDX;
 using SharpDX.Toolkit;
+
 
 namespace Civilization.ViewModels
 {
@@ -12,7 +14,7 @@ namespace Civilization.ViewModels
         private Texture2D texture;
         private Texture2D savedTexture;
         private VertexInputLayout inputLayout;
-        private bool start = false;
+        private bool runSimulation = false;
 
         public Scene()
         {
@@ -23,16 +25,17 @@ namespace Civilization.ViewModels
             Content.RootDirectory = "Content";
         }
 
-        public void Start()
+        public void RunSimulation()
         {
-            start = true;
+            runSimulation = true;
         }
 
-        public void Stop()
+        public void StopSimulation()
         {
-            start = false;
+            runSimulation = false;
         }
-
+        
+#if (DESIGN_MODE != true)
         protected override void LoadContent()
         {
             savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
@@ -41,7 +44,7 @@ namespace Civilization.ViewModels
 
         protected override void Update(GameTime gameTime)
         {
-            if (!start)
+            if (!runSimulation)
                 return;
 
             for (int i=0;i<MainModel.Instance.DrawSpeed;i++)
@@ -111,7 +114,7 @@ namespace Civilization.ViewModels
 
         protected override void Draw(GameTime gameTime)
         {
-            if (!start)
+            if (!runSimulation)
                 return;
 
             SpriteBatch spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -122,5 +125,6 @@ namespace Civilization.ViewModels
             // Handle base.Draw
             base.Draw(gameTime);
         }
+#endif
     }
 }

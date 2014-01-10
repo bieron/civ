@@ -132,9 +132,9 @@ namespace Civilization.Models
                 return;
             }
             if (owner != null)
-                owner.lostCell(this);
+                owner.LostCell(this);
             if (newOwner != null)
-                newOwner.gainedCell(this);
+                newOwner.GainedCell(this);
             owner = newOwner;
             newOwner = null;
         }
