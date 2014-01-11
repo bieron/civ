@@ -53,6 +53,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.0.0-rc1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DirectX_libs\SharpDX.dll</HintPath>
@@ -167,6 +173,7 @@
     </Compile>
     <Compile Include="Models\ColorDistributor.cs" />
     <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\TaskBoardProcessor.cs" />
     <Compile Include="ViewModels\GuiViewModel.cs" />
     <Compile Include="ViewModels\PaintingViewModel.cs" />
     <Compile Include="Views\GUI.cs" />
@@ -215,6 +222,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

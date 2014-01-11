@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Civilization.Models
 {
-    internal class Cell
+    public class Cell
     {
         private List<Cell> neighbors;
         private double desirability, defensibility;

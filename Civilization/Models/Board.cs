@@ -6,18 +6,14 @@ using System.Threading;
 
 namespace Civilization.Models
 {
-    internal class Board
+    public class Board
     {
         private Cell[][] cells;
         private readonly int height;
         private readonly int width;
-        private Task ULTask;
-        private Task URTask;
-        private Task LLTask;
-        private Task LRTask;
         private bool useThreads;
         private bool bFirstTick;
-        private Random[] randomsForTasks;
+        private TaskBoardProcessor taskBoardProcessor;
 
         public bool UseThreads
         {
@@ -53,9 +49,7 @@ namespace Civilization.Models
 
             if (useThreads)
             {
-                randomsForTasks = new Random[4];   
-                for(int i = 0; i < randomsForTasks.Length; ++i)
-                    randomsForTasks[i] = new Random();
+                taskBoardProcessor = TaskBoardProcessor.CreateNTasksForBoard(4, height, width);
             }
         }
 
@@ -104,19 +98,6 @@ namespace Civilization.Models
                     }
                 }
             }
-        }
-
-        private void RunTasks()
-        {
-            ULTask = Task.Run(() => DetermineNewOwnerForRangeCells(0, width/2, 0, height/2, randomsForTasks[0]));
-            URTask = Task.Run(() => DetermineNewOwnerForRangeCells(0, width / 2, height / 2, height, randomsForTasks[1]));
-            LLTask = Task.Run(() => DetermineNewOwnerForRangeCells(width / 2, width, 0, height / 2, randomsForTasks[2]));
-            LRTask = Task.Run(() => DetermineNewOwnerForRangeCells(width / 2, width, height / 2, height, randomsForTasks[3]));
-        }
-
-        private void WaitForTasks()
-        {
-            Task.WaitAll(ULTask, URTask, LLTask, LRTask);
         }
 
         private bool IsInnerCell(int col, int row)
@@ -203,10 +184,10 @@ namespace Civilization.Models
             {
                 bFirstTick = false;
                 if(useThreads)
-                    RunTasks();
+                    taskBoardProcessor.StartProcessing(DetermineNewOwnerForRangeCells);
             }
             if (useThreads)
-                WaitForTasks();
+                taskBoardProcessor.WaitForEnd();
             else
                 DetermineNewOwnerForAllCells();
             ChangeOwnerForAllCells();
@@ -215,7 +196,7 @@ namespace Civilization.Models
             MainModel.Instance.EndOfTick();
             if (useThreads)
             {
-                RunTasks();
+                taskBoardProcessor.StartProcessing(DetermineNewOwnerForRangeCells);
             }
         }
 

@@ -2,7 +2,7 @@
 
 namespace Civilization.Models
 {
-    internal class Civ
+    public class Civ
     {
         private Cell capital;
         private string name;
