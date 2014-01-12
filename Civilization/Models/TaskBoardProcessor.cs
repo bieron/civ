@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Owin;
+//using Owin;
 
 
 namespace Civilization.Models

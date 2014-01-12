@@ -219,6 +219,11 @@ namespace Civilization.Models
 
         private void DetermineNewOwnerForRangeCells(int fromX, int toX, int fromY, int toY, Random random = null)
         {
+            if (fromX < 0) fromX = 0;
+            if (fromY < 0) fromY = 0;
+            if (toX > Width) toX = Width;//toX = Math.Min(toX, Width);
+            if (toY > Height) toY = Height;//toY = Math.Min(toY, Height);
+
             if (random == null)
                 random = MainModel.Instance.Random;
             for (int i = fromX; i < toX; i++)
