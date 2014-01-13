@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Owin;
 
 
 namespace Civilization.Models
@@ -74,9 +73,9 @@ namespace Civilization.Models
         {
             int ind = _tasksCount - 1;
             if (_divideHorizontaly)
-                _tasks[ind] = Task.Run(() => processor(0, _width, ind * _blockSize, (ind+1) * _blockSize + _lastBlockSize, _rands[ind]));
+                _tasks[ind] = Task.Run(() => processor(0, _width, ind * _blockSize, ind * _blockSize + _lastBlockSize, _rands[ind]));
             else
-                _tasks[ind] = Task.Run(() => processor(ind * _blockSize, (ind+1) * _blockSize + _lastBlockSize, 0, _width, _rands[ind]));
+                _tasks[ind] = Task.Run(() => processor(ind * _blockSize, ind * _blockSize + _lastBlockSize, 0, _width, _rands[ind]));
         }
 
         public void WaitForEnd()
