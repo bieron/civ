@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Civilization.Models;
 using MvvmSupport;
 using SharpDX.Toolkit;
+using System.Windows;
 
 namespace Civilization.ViewModels
 {
@@ -19,6 +20,54 @@ namespace Civilization.ViewModels
         private readonly ICommand resetCommand;
         private bool isNotRunning;
         private bool isNotPaused;
+        private readonly ICommand capitalsCommand;
+        private readonly ICommand bordersCommand;
+        private readonly ICommand territoryCommand;
+        private readonly ICommand splitsCommand;
+        private bool paintCapitals = true;
+        private bool paintBorders = true;
+        private bool paintTerritory = true;
+        private bool doSplits = true;
+        
+        public bool PaintCapitals
+        {
+            get { return paintCapitals; }
+            set
+            {
+                paintCapitals = value;
+                RaisePropertyChanged("PaintCapitals");
+            }
+        }
+
+        public bool PaintBorders
+        {
+            get { return paintBorders; }
+            set
+            {
+                paintBorders = value;
+                RaisePropertyChanged("PaintBorders");
+            }
+        }
+
+        public bool PaintTerritory
+        {
+            get { return paintTerritory; }
+            set
+            {
+                paintTerritory = value;
+                RaisePropertyChanged("PaintTerritory");
+            }
+        }
+
+        public bool DoSplits
+        {
+            get { return doSplits; }
+            set
+            {
+                doSplits = value;
+                RaisePropertyChanged("DoSplits");
+            }
+        }
 
         public Scene Game
         {
@@ -130,6 +179,10 @@ namespace Civilization.ViewModels
             startEndCommand = new RelayCommand<object>(StartEnd);
             pauseResumeCommand = new RelayCommand<object>(PauseResume);
             resetCommand = new RelayCommand<object>(Reset);
+            capitalsCommand = new RelayCommand<object>(ToggleCapitals);
+            bordersCommand = new RelayCommand<object>(ToggleBorders);
+            territoryCommand = new RelayCommand<object>(ToggleTerritory);
+            splitsCommand = new RelayCommand<object>(ToggleSplits);
         }
 
         private void StartEnd(object obj)
@@ -169,6 +222,46 @@ namespace Civilization.ViewModels
             IsRunning = false;
             game.StopSimulation();
             MainModel.Instance.Reset();
+        }
+
+        public ICommand CapitalsCommand
+        {
+            get { return capitalsCommand; }
+        }
+
+        private void ToggleCapitals(object obj)
+        {
+            game.SetPaintCapitals(paintCapitals);
+        }
+
+        public ICommand BordersCommand
+        {
+            get { return bordersCommand; }
+        }
+
+        private void ToggleBorders(object obj)
+        {
+            game.SetPaintBorders(paintBorders);
+        }
+
+        public ICommand TerritoryCommand
+        {
+            get { return territoryCommand; }
+        }
+
+        private void ToggleTerritory(object obj)
+        {
+            game.SetPaintTerritory(paintTerritory);
+        }
+
+        public ICommand SplitsCommand
+        {
+            get { return splitsCommand; }
+        }
+
+        private void ToggleSplits(object obj)
+        {
+            MainModel.Instance.DoSplits = doSplits;
         }
     }
 }

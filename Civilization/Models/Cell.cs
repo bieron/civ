@@ -80,6 +80,8 @@ namespace Civilization.Models
 
             foreach (Cell neighbour in neighbors)
             {
+                if (neighbour.Owner == owner)
+                    continue;
                 if (neighbour.Owner != null)
                     if (owner == null)
                     {

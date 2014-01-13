@@ -26,6 +26,13 @@ namespace Civilization.Models
         private long tickCount;
         private long last100TicksMilliseconds;
         private Stopwatch sw;
+        private bool doSplits;
+
+        public bool DoSplits
+        {
+            get { return doSplits; }
+            set { doSplits = value; }
+        }
 
         public int DrawSpeed
         {

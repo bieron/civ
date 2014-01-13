@@ -44,12 +44,16 @@ namespace Civilization.Models
             CreateCells();
             InitializeNeighbours();
             InitializeCells();
-            useThreads = true;
+            useThreads = false;
             bFirstTick = true;
 
             if (useThreads)
             {
                 taskBoardProcessor = TaskBoardProcessor.CreateNTasksForBoard(4, height, width);
+            }
+            else
+            {
+                System.Console.WriteLine("SINGLE-THREAD MODE! Toggle useThreads in Board class constructor to use multi-threading");
             }
         }
 

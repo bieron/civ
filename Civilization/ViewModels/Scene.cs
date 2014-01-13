@@ -15,6 +15,9 @@ namespace Civilization.ViewModels
         private Texture2D savedTexture;
         private VertexInputLayout inputLayout;
         private bool runSimulation = false;
+        private bool bPaintBorders = true;
+        private bool bPaintTerritory = true;
+        private bool bPaintCapitals = true;
 
         public Scene()
         {
@@ -23,6 +26,21 @@ namespace Civilization.ViewModels
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
+        }
+
+        public void SetPaintBorders(bool val)
+        {
+            bPaintBorders = val;
+        }
+
+        public void SetPaintTerritory(bool val)
+        {
+            bPaintTerritory = val;
+        }
+
+        public void SetPaintCapitals(bool val)
+        {
+            bPaintCapitals = val;
         }
 
         public void RunSimulation()
@@ -52,7 +70,8 @@ namespace Civilization.ViewModels
 
             Image img = savedTexture.GetDataAsImage();
             PaintCountries(img);
-            PaintCapitals(img);
+            if(bPaintCapitals)
+                PaintCapitals(img);
 
             if (texture != null)
                 texture.Dispose();
@@ -62,7 +81,7 @@ namespace Civilization.ViewModels
             base.Update(gameTime);
         }
 
-        private static void PaintCountries(Image img)
+        private void PaintCountries(Image img)
         {
             Cell[][] cells = MainModel.Instance.GameBoard.Cells;
             for (int i = 0; i < img.PixelBuffer[0].Width; i++)
@@ -77,9 +96,9 @@ namespace Civilization.ViewModels
                             bInternal = false;
                             break;
                         }
-                    if (bInternal)
+                    if (bPaintTerritory&&(bInternal||!bPaintBorders))
                         img.PixelBuffer[0].SetPixel(i, j, cells[i][j].Owner.Color);
-                    else
+                    if(bPaintBorders&&!bInternal)
                         img.PixelBuffer[0].SetPixel(i, j, new Color(255, 0, 0));
                 }
             }

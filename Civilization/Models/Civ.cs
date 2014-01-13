@@ -67,14 +67,17 @@ namespace Civilization.Models
             if (capital.Owner != this)
                 LostCapital();
             CalculateStrength();
-            long minSplitThresholdLand = 50000;
-            long minSplitThresholdStrength = 1500000;
-            long maxSplitThresholdStrength = 5000000;
-            if (Strength > minSplitThresholdStrength && landCells>minSplitThresholdLand)
+            if (MainModel.Instance.DoSplits)
             {
-                double CollapseProbability = (strength - minSplitThresholdStrength) / (maxSplitThresholdStrength - minSplitThresholdStrength);
-                if (MainModel.Instance.Random.NextDouble() < CollapseProbability)
-                    MainModel.Instance.SplitCivilization(this);
+                long minSplitThresholdLand = 50000;
+                long minSplitThresholdStrength = 1500000;
+                long maxSplitThresholdStrength = 5000000;
+                if (Strength > minSplitThresholdStrength && landCells > minSplitThresholdLand)
+                {
+                    double CollapseProbability = (strength - minSplitThresholdStrength) / (maxSplitThresholdStrength - minSplitThresholdStrength);
+                    if (MainModel.Instance.Random.NextDouble() < CollapseProbability)
+                        MainModel.Instance.SplitCivilization(this);
+                }
             }
         }
 
