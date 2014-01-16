@@ -12,7 +12,6 @@ namespace Civilization.ViewModels
         private Scene game = new Scene();
 
         private int civsCount;
-        private int simulationSpeed;
         private string toggleStartEnd;
         private readonly ICommand startEndCommand;
         private string togglePauseResume;
@@ -89,16 +88,6 @@ namespace Civilization.ViewModels
             }
         }
 
-        public int SimulationSpeed
-        {
-            get { return simulationSpeed; }
-            set
-            {
-                simulationSpeed = value;
-                RaisePropertyChanged("SimulationSpeed");
-            }
-        }
-
         public string ToggleStartEnd
         {
             get { return toggleStartEnd; }
@@ -170,7 +159,6 @@ namespace Civilization.ViewModels
         {
             isNotRunning = true;
             isNotPaused = true;
-            SimulationSpeed = 50;
             CivsCount = 2;
 
             TogglePauseResume = "Pause";
