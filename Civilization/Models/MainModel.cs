@@ -60,6 +60,11 @@ namespace Civilization.Models
             get { return civilizations; }
         }
 
+        public int AliveCivilizationsCount
+        {
+            get { return civilizations.Count + newCivilizations.Count - deadCivilizations.Count; }
+        }
+
         public delegate void TickEventHandler(object sender, EventArgs args);
         public event TickEventHandler TickEvent;
 

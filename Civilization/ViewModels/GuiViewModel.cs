@@ -25,7 +25,6 @@ namespace Civilization.ViewModels
         private bool paintBorders = true;
         private bool paintTerritory = true;
         private bool doSplits = true;
-        private int activeCivsCount;
 
         public bool PaintCapitals
         {
@@ -156,12 +155,7 @@ namespace Civilization.ViewModels
 
         public int ActiveCivsCount
         {
-            get { return activeCivsCount; }
-            set
-            {
-                activeCivsCount = value;
-                RaisePropertyChanged("ActiveCivsCount");
-            }
+            get { return MainModel.Instance.AliveCivilizationsCount; }
         }
 
         public long TicksCount
@@ -172,6 +166,7 @@ namespace Civilization.ViewModels
         private void GvmTickEvent(object sender, EventArgs args)
         {
             RaisePropertyChanged("TicksCount");
+            RaisePropertyChanged("ActiveCivsCount");
         }
 
         public GuiViewModel()
