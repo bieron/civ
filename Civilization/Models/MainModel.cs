@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 
 namespace Civilization.Models
 {
@@ -23,7 +24,7 @@ namespace Civilization.Models
         private Board gameBoard;
         private Random random;
         private int drawSpeed;
-        private long tickCount;
+        private long ticksCount;
         private long last100TicksMilliseconds;
         private Stopwatch sw;
         private bool doSplits;
@@ -37,6 +38,11 @@ namespace Civilization.Models
         public int DrawSpeed
         {
             get { return drawSpeed; }
+        }
+
+        public long TicksCount
+        {
+            get { return ticksCount; }
         }
 
         public Board GameBoard
@@ -54,6 +60,15 @@ namespace Civilization.Models
             get { return civilizations; }
         }
 
+        public delegate void TickEventHandler(object sender, EventArgs args);
+        public event TickEventHandler TickEvent;
+
+        private void Tick()
+        {
+            if(TickEvent != null)
+                TickEvent(this, EventArgs.Empty);
+        }
+
         protected MainModel()
         {
             System.Console.WriteLine("MainModel begin");
@@ -63,7 +78,7 @@ namespace Civilization.Models
             newCivilizations = new List<Civ>();
             random = new System.Random();
             drawSpeed = 1;
-            tickCount = 0;
+            ticksCount = 0;
             colors = new ColorDistributor();
             //tests
             predefinedCivilizations = new Civ[]
@@ -96,7 +111,7 @@ namespace Civilization.Models
 
         public void Reset()
         {
-            tickCount = 0;
+            ticksCount = 0;
             colors.AddColors(predefinedCivilizations.Select(p => p.Color));
             civilizations.Clear();
             newCivilizations.Clear();
@@ -120,15 +135,16 @@ namespace Civilization.Models
                 civilizations.Remove(civ);
             deadCivilizations.Clear();
             //Debug.WriteLine(civilizations[1].Strength);
-            tickCount++;
-            if (tickCount % 100 == 0)
+            ticksCount++;
+            if (ticksCount % 100 == 0)
             {
                 sw.Stop();
                 last100TicksMilliseconds = sw.ElapsedMilliseconds;
-                Trace.WriteLine("Tick " + tickCount + ": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
+                Trace.WriteLine("TickEvent " + ticksCount + ": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
                 sw = new Stopwatch();
                 sw.Start();
             }
+            Tick();
         }
 
         public void SplitCivilization(Civ empire)

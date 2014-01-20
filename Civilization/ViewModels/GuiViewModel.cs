@@ -2,8 +2,6 @@
 using System.Windows.Input;
 using Civilization.Models;
 using MvvmSupport;
-using SharpDX.Toolkit;
-using System.Windows;
 
 namespace Civilization.ViewModels
 {
@@ -27,7 +25,8 @@ namespace Civilization.ViewModels
         private bool paintBorders = true;
         private bool paintTerritory = true;
         private bool doSplits = true;
-        
+        private int activeCivsCount;
+
         public bool PaintCapitals
         {
             get { return paintCapitals; }
@@ -155,6 +154,26 @@ namespace Civilization.ViewModels
             }
         }
 
+        public int ActiveCivsCount
+        {
+            get { return activeCivsCount; }
+            set
+            {
+                activeCivsCount = value;
+                RaisePropertyChanged("ActiveCivsCount");
+            }
+        }
+
+        public long TicksCount
+        {
+            get { return MainModel.Instance.TicksCount; }
+        }
+
+        private void GvmTickEvent(object sender, EventArgs args)
+        {
+            RaisePropertyChanged("TicksCount");
+        }
+
         public GuiViewModel()
         {
             isNotRunning = true;
@@ -171,6 +190,7 @@ namespace Civilization.ViewModels
             bordersCommand = new RelayCommand<object>(ToggleBorders);
             territoryCommand = new RelayCommand<object>(ToggleTerritory);
             splitsCommand = new RelayCommand<object>(ToggleSplits);
+            MainModel.Instance.TickEvent += GvmTickEvent;
         }
 
         private void StartEnd(object obj)
