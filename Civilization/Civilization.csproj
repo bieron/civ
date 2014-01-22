@@ -236,7 +236,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\EgyptMap\desirability.bmp" />
     <Resource Include="Resources\EgyptMap\land.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +257,24 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMap\defensibility.bmp" />
+    <Resource Include="Resources\EgyptMap\desirability.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMapHuge\defensibility.bmp" />
+    <Resource Include="Resources\EgyptMapHuge\desirability.bmp" />
+    <Resource Include="Resources\EgyptMapHuge\land.bmp" />
+    <Resource Include="Resources\EgyptMapHuge\terrain.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMapSmall\land.bmp" />
+    <Resource Include="Resources\EgyptMapSmall\terrain.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMapSmall\defensibility.bmp" />
+    <Resource Include="Resources\EgyptMapSmall\desirability.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

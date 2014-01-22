@@ -25,6 +25,12 @@ namespace Civilization.Models
             set { desirability = value; }
         }
 
+        public double Defensibility
+        {
+            get { return defensibility; }
+            set { defensibility = value; }
+        }
+
         public Civ Owner
         {
             get { return owner; }
@@ -87,7 +93,7 @@ namespace Civilization.Models
                     {
                         if (!reachable)
                         {
-                            if (random.Next(255) <= desirability + 10)
+                            if (random.Next(255) <= desirability-10)
                             {
                                 newOwner = neighbour.Owner;
                                 return;

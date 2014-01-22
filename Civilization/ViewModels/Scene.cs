@@ -56,7 +56,7 @@ namespace Civilization.ViewModels
 #if (DESIGN_MODE != true)
         protected override void LoadContent()
         {
-            savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
+            savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\" + MainModel.Instance.GameBoard.MapTitle + @"\terrain.bmp");
             base.LoadContent();
         }
 

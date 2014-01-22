@@ -57,7 +57,7 @@ namespace Civilization.Models
         protected MainModel()
         {
             System.Console.WriteLine("MainModel begin");
-            gameBoard = new Board("EgyptMap");
+            gameBoard = new Board("EgyptMapSmall");
             civilizations = new List<Civ>();
             deadCivilizations = new List<Civ>();
             newCivilizations = new List<Civ>();
@@ -66,22 +66,42 @@ namespace Civilization.Models
             tickCount = 0;
             colors = new ColorDistributor();
             //tests
-            predefinedCivilizations = new Civ[]
-            {
-                new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[117][181], "Egyptian Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[221][137], "Jewish Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[264][583], "Some African Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[230][39], "Persian Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[169][353], "Kings of the Desert Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[409][522], "Arabian Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor())
-            };
+            setDefaultCivs();
 
             sw = new Stopwatch();
             sw.Start();
+        }
+
+        public void setDefaultCivs()
+        {
+            if(gameBoard.MapTitle=="EgyptMap")
+                predefinedCivilizations = new Civ[]
+                {
+                    new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[117][181], "Egyptian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[221][137], "Jewish Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[264][583], "Some African Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[230][39], "Persian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[169][353], "Kings of the Desert Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[409][522], "Arabian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor())
+                };
+            else if(gameBoard.MapTitle=="EgyptMapSmall")
+                predefinedCivilizations = new Civ[]
+                {
+                    new Civ(gameBoard.Cells[26][10], "Greek Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[74][101], "Egyptian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[132][85], "Jewish Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[153][341], "Some African Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[135][22], "Persian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[87][217], "Kings of the Desert Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[243][308], "Arabian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[233][55], "Mongol Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[109][45], "Cyprus Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[8][104], "Moors Empire", colors.GetNextColor())
+                };
         }
 
         public void Start(int civsCount)
