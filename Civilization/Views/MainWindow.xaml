@@ -27,23 +27,18 @@
                     <RowDefinition Height="Auto" MinHeight="30"/>
                     <RowDefinition Height="Auto" MinHeight="30"/>
                     <RowDefinition Height="Auto" MinHeight="30"/>
+                    <RowDefinition Height="Auto" MinHeight="30"/>
+                    <RowDefinition Height="Auto" MinHeight="30"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Label Content="{Binding CivsCount}" ContentStringFormat="Ilość cywilizacji: {0}" Grid.Column="0" Grid.Row="0"/>
-                <Label Content="{Binding SimulationSpeed}" ContentStringFormat="Prędkość symulacji: {0}%" Grid.Column="0" Grid.Row="1"/>
+                <Label Content="{Binding CivsCount}" ContentStringFormat="Ilość początkowych cywilizacji: {0}" Grid.Column="0" Grid.Row="0"/>
                 <Slider Name="CivsCountSlider" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" IsEnabled="{Binding IsNotRunning}"
                     Minimum="1"
                     Maximum="10"
                     Value="{Binding CivsCount}"
-                    IsSnapToTickEnabled="True"
-                    TickFrequency="1"/>
-                <Slider Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"
-                    Minimum="1"
-                    Maximum="100"
-                    Value="{Binding SimulationSpeed}"
                     IsSnapToTickEnabled="True"
                     TickFrequency="1"/>
                 <CheckBox Command="{Binding CapitalsCommand}" IsChecked="{Binding PaintCapitals}" Grid.Row="2" Grid.ColumnSpan="2" Content="Rysuj stolice" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
@@ -53,6 +48,8 @@
                 <Button IsEnabled="{Binding IsNotPaused}" Content="{Binding ToggleStartEnd}" Command="{Binding StartEndCommand}" Grid.ColumnSpan="2" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>
                 <Button IsEnabled="{Binding IsRunning}" Content="{Binding TogglePauseResume}" Command="{Binding PauseResumeCommand}" Grid.ColumnSpan="2" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>
                 <Button IsEnabled="{Binding IsNotPaused}"  Content="Reset" Command="{Binding ResetCommand}" Grid.ColumnSpan="2" Grid.Row="8" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>
+                <Label Content="{Binding ActiveCivsCount}" ContentStringFormat="Ilość aktywnych cywilizacji: {0}" Grid.ColumnSpan="2" Grid.Row="9"/>
+                <Label Content="{Binding TicksCount}" ContentStringFormat="Ilość iteracji: {0}" Grid.ColumnSpan="2" Grid.Row="10"/>
             </Grid>
         </Border>
     </Grid>

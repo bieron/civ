@@ -2,8 +2,6 @@
 using System.Windows.Input;
 using Civilization.Models;
 using MvvmSupport;
-using SharpDX.Toolkit;
-using System.Windows;
 
 namespace Civilization.ViewModels
 {
@@ -12,7 +10,6 @@ namespace Civilization.ViewModels
         private Scene game = new Scene();
 
         private int civsCount;
-        private int simulationSpeed;
         private string toggleStartEnd;
         private readonly ICommand startEndCommand;
         private string togglePauseResume;
@@ -28,7 +25,7 @@ namespace Civilization.ViewModels
         private bool paintBorders = true;
         private bool paintTerritory = true;
         private bool doSplits = true;
-        
+
         public bool PaintCapitals
         {
             get { return paintCapitals; }
@@ -86,16 +83,6 @@ namespace Civilization.ViewModels
             {
                 civsCount = value;
                 RaisePropertyChanged("CivsCount");
-            }
-        }
-
-        public int SimulationSpeed
-        {
-            get { return simulationSpeed; }
-            set
-            {
-                simulationSpeed = value;
-                RaisePropertyChanged("SimulationSpeed");
             }
         }
 
@@ -166,11 +153,26 @@ namespace Civilization.ViewModels
             }
         }
 
+        public int ActiveCivsCount
+        {
+            get { return MainModel.Instance.AliveCivilizationsCount; }
+        }
+
+        public long TicksCount
+        {
+            get { return MainModel.Instance.TicksCount; }
+        }
+
+        private void GvmTickEvent(object sender, EventArgs args)
+        {
+            RaisePropertyChanged("TicksCount");
+            RaisePropertyChanged("ActiveCivsCount");
+        }
+
         public GuiViewModel()
         {
             isNotRunning = true;
             isNotPaused = true;
-            SimulationSpeed = 50;
             CivsCount = 2;
 
             TogglePauseResume = "Pause";
@@ -183,6 +185,7 @@ namespace Civilization.ViewModels
             bordersCommand = new RelayCommand<object>(ToggleBorders);
             territoryCommand = new RelayCommand<object>(ToggleTerritory);
             splitsCommand = new RelayCommand<object>(ToggleSplits);
+            MainModel.Instance.TickEvent += GvmTickEvent;
         }
 
         private void StartEnd(object obj)

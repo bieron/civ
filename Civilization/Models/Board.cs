@@ -50,7 +50,7 @@ namespace Civilization.Models
             CreateCells();
             InitializeNeighbours();
             InitializeCells();
-            useThreads = false;
+            useThreads = true;
             bFirstTick = true;
 
             if (useThreads)
@@ -59,7 +59,7 @@ namespace Civilization.Models
             }
             else
             {
-                System.Console.WriteLine("SINGLE-THREAD MODE! Toggle useThreads in Board class constructor to use multi-threading");
+                System.Console.WriteLine(@"SINGLE-THREAD MODE! Toggle useThreads in Board class constructor to use multi-threading");
             }
         }
 
