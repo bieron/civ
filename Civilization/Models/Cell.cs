@@ -6,7 +6,7 @@ namespace Civilization.Models
     public class Cell
     {
         private List<Cell> neighbors;
-        private double desirability, defensibility, compDefensibility, defDivider = 50.0;
+        private double desirability, defensibility, compDefensibility, defDivider = 3.0;
         private Dictionary<Civ, double> capitalDistance;
         private Civ owner;
         private Civ newOwner;
@@ -104,7 +104,7 @@ namespace Civilization.Models
                                 return;
                             }
                         }
-                        else if (random.Next(255) <= desirability + 5)
+                        else if (random.Next(255) <= desirability + 2)
                         {
                             newOwner = neighbour.Owner;
                             return;

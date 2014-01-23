@@ -11,6 +11,13 @@ namespace Civilization.Models
         private long landCellsdt;
         private double strength;
         private double landDesirability;
+        private int splitCount;
+
+        public int SplitCount
+        {
+            get { return splitCount; }
+            set { splitCount = value; }
+        }
 
         public string Name
         {
@@ -96,6 +103,7 @@ namespace Civilization.Models
             this.capital = capital;
             this.name = name;
             this.color = color;
+            splitCount = 0;
         }
 
         public Civ(Civ other)
@@ -114,6 +122,7 @@ namespace Civilization.Models
         public void CalculateStrength()
         {
             strength = landCells * (landDesirability/landCells) + 0.1 * landCellsdt;
+            strength /= (splitCount+1)*(splitCount+1);
         }
     }
 }
