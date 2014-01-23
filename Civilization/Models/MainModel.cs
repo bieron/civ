@@ -86,6 +86,7 @@ namespace Civilization.Models
 
         protected MainModel()
         {
+            
             System.Console.WriteLine("MainModel begin");
             gameBoard = new Board("EgyptMap");
             musicPlayer = new Mp3Player(@"..\..\Resources\Music\Sample\intro.mp3", @"..\..\Resources\Music\Sample\music.mp3");
