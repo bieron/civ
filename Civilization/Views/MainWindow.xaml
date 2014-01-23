@@ -41,9 +41,16 @@
                     Value="{Binding CivsCount}"
                     IsSnapToTickEnabled="True"
                     TickFrequency="1"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="30,9,0,0">
+                    <Label Content="Obraz tła" 
+                       Target="comboBoxBG" 
+                       Margin="0" 
+                       Padding="5,5,5,1" />
+                    <ComboBox x:Name="comboBoxBG" ItemsSource="{Binding SourceBG}" SelectedItem="{Binding SelectedBG, Mode=TwoWay}" />
+                </StackPanel>
                 <CheckBox Command="{Binding CapitalsCommand}" IsChecked="{Binding PaintCapitals}" Grid.Row="2" Grid.ColumnSpan="2" Content="Rysuj stolice" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
                 <CheckBox Command="{Binding BordersCommand}" IsChecked="{Binding PaintBorders}" Grid.Row="3" Grid.ColumnSpan="2" Content="Rysuj granice" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
-                <CheckBox Command="{Binding TerritoryCommand}" IsChecked="{Binding PaintTerritory}" Grid.Row="4" Grid.ColumnSpan="2" Content="Rysuj teren" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
+                <CheckBox Command="{Binding TerritoryCommand}" IsChecked="{Binding PaintTerritory}" Grid.Row="4" Grid.ColumnSpan="2" Content="Rysuj kolory cywilizacji" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
                 <CheckBox Command="{Binding SplitsCommand}" IsChecked="{Binding DoSplits}" Grid.Row="5" Grid.ColumnSpan="2" Content="Rozpady cywilizacji" HorizontalAlignment="Left" VerticalContentAlignment="Top" Margin="66,9,0,0" />
                 <Button IsEnabled="{Binding IsNotPaused}" Content="{Binding ToggleStartEnd}" Command="{Binding StartEndCommand}" Grid.ColumnSpan="2" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>
                 <Button IsEnabled="{Binding IsRunning}" Content="{Binding TogglePauseResume}" Command="{Binding PauseResumeCommand}" Grid.ColumnSpan="2" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1" MinWidth="100"/>

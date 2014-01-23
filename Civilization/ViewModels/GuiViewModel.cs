@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Civilization.Models;
 using MvvmSupport;
+using System.Collections.Generic;
 
 namespace Civilization.ViewModels
 {
@@ -25,6 +26,24 @@ namespace Civilization.ViewModels
         private bool paintBorders = true;
         private bool paintTerritory = true;
         private bool doSplits = true;
+
+        List<string> sourceBG = new List<string> { "Teren", "Desirability", "Defensibility"};
+        string selectedBG = "Teren";
+
+        public List<string> SourceBG
+        {
+            get { return sourceBG; } 
+        }
+        public string SelectedBG 
+        { 
+            get { return selectedBG; } 
+            set 
+            { 
+                selectedBG = value;
+                RaisePropertyChanged("SelectedBG");
+                game.UsedTextureString = selectedBG;
+            }
+        }
 
         public bool PaintCapitals
         {

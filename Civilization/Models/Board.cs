@@ -16,6 +16,21 @@ namespace Civilization.Models
         private TaskBoardProcessor taskBoardProcessor;
         private string mapTitle;
 
+        //cell computation help constants
+        private int wPlusH;
+        private int wPlusHByDivider;
+        private int divider = 10;
+
+        public int WPlusH
+        {
+            get { return wPlusH; }
+        }
+
+        public int WPlusHByDivider
+        {
+            get { return wPlusHByDivider; }
+        }
+
         public bool UseThreads
         {
             get { return useThreads; }
@@ -47,6 +62,8 @@ namespace Civilization.Models
             Bitmap terrainBmp = new Bitmap(@"..\..\Resources\" + mapTitle + @"\terrain.bmp");
             height = terrainBmp.Height;
             width = terrainBmp.Width;
+            wPlusH = width + height;
+            wPlusHByDivider = wPlusH / divider;
             CreateCells();
             InitializeNeighbours();
             InitializeCells();
@@ -169,6 +186,7 @@ namespace Civilization.Models
         {
             DetermineReachability();
             DetermineDesirability();
+            DetermineDefensibility();
         }
 
         private void DetermineReachability()

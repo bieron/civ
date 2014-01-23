@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms.VisualStyles;
 
@@ -27,7 +28,16 @@ namespace Civilization.Models
         private long ticksCount;
         private long last100TicksMilliseconds;
         private Stopwatch sw;
-        private bool doSplits;
+        private bool doSplits=true;
+        private Mp3Player musicPlayer;
+
+        private string selectedBG;
+
+        public string SelectedBG
+        {
+            get { return selectedBG; }
+            set { selectedBG = value; }
+        }
 
         public bool DoSplits
         {
@@ -77,7 +87,8 @@ namespace Civilization.Models
         protected MainModel()
         {
             System.Console.WriteLine("MainModel begin");
-            gameBoard = new Board("EgyptMapSmall");
+            gameBoard = new Board("EgyptMap");
+            musicPlayer = new Mp3Player(@"..\..\Resources\Music\Sample\intro.mp3", @"..\..\Resources\Music\Sample\music.mp3");
             civilizations = new List<Civ>();
             deadCivilizations = new List<Civ>();
             newCivilizations = new List<Civ>();
