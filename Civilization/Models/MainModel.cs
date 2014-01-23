@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 
 namespace Civilization.Models
 {
@@ -23,13 +25,34 @@ namespace Civilization.Models
         private Board gameBoard;
         private Random random;
         private int drawSpeed;
-        private long tickCount;
+        private long ticksCount;
         private long last100TicksMilliseconds;
         private Stopwatch sw;
+        private bool doSplits=true;
+        private Mp3Player musicPlayer;
+
+        private string selectedBG;
+
+        public string SelectedBG
+        {
+            get { return selectedBG; }
+            set { selectedBG = value; }
+        }
+
+        public bool DoSplits
+        {
+            get { return doSplits; }
+            set { doSplits = value; }
+        }
 
         public int DrawSpeed
         {
             get { return drawSpeed; }
+        }
+
+        public long TicksCount
+        {
+            get { return ticksCount; }
         }
 
         public Board GameBoard
@@ -47,35 +70,70 @@ namespace Civilization.Models
             get { return civilizations; }
         }
 
+        public int AliveCivilizationsCount
+        {
+            get { return civilizations.Count + newCivilizations.Count - deadCivilizations.Count; }
+        }
+
+        public delegate void TickEventHandler(object sender, EventArgs args);
+        public event TickEventHandler TickEvent;
+
+        private void Tick()
+        {
+            if(TickEvent != null)
+                TickEvent(this, EventArgs.Empty);
+        }
+
         protected MainModel()
         {
             
             System.Console.WriteLine("MainModel begin");
             gameBoard = new Board("EgyptMap");
+            musicPlayer = new Mp3Player(@"..\..\Resources\Music\Sample\intro.mp3", @"..\..\Resources\Music\Sample\music.mp3");
             civilizations = new List<Civ>();
             deadCivilizations = new List<Civ>();
             newCivilizations = new List<Civ>();
             random = new System.Random();
             drawSpeed = 1;
-            tickCount = 0;
+            ticksCount = 0;
             colors = new ColorDistributor();
             //tests
-            predefinedCivilizations = new Civ[]
-            {
-                new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[117][181], "Egyptian Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[221][137], "Jewish Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[264][583], "Some African Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[230][39], "Persian Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[169][353], "Kings of the Desert Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[409][522], "Arabian Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()),
-                new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor())
-            };
+            setDefaultCivs();
 
             sw = new Stopwatch();
             sw.Start();
+        }
+
+        public void setDefaultCivs()
+        {
+            if(gameBoard.MapTitle=="EgyptMap")
+                predefinedCivilizations = new Civ[]
+                {
+                    new Civ(gameBoard.Cells[39][21], "Greek Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[117][181], "Egyptian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[221][137], "Jewish Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[264][583], "Some African Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[230][39], "Persian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[169][353], "Kings of the Desert Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[409][522], "Arabian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[417][109], "Mongol Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[161][80], "Cyprus Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[12][157], "Moors Empire", colors.GetNextColor())
+                };
+            else if(gameBoard.MapTitle=="EgyptMapSmall")
+                predefinedCivilizations = new Civ[]
+                {
+                    new Civ(gameBoard.Cells[26][10], "Greek Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[74][101], "Egyptian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[132][85], "Jewish Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[153][341], "Some African Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[135][22], "Persian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[87][217], "Kings of the Desert Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[243][308], "Arabian Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[233][55], "Mongol Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[109][45], "Cyprus Empire", colors.GetNextColor()),
+                    new Civ(gameBoard.Cells[8][104], "Moors Empire", colors.GetNextColor())
+                };
         }
 
         public void Start(int civsCount)
@@ -90,7 +148,7 @@ namespace Civilization.Models
 
         public void Reset()
         {
-            tickCount = 0;
+            ticksCount = 0;
             colors.AddColors(predefinedCivilizations.Select(p => p.Color));
             civilizations.Clear();
             newCivilizations.Clear();
@@ -114,15 +172,16 @@ namespace Civilization.Models
                 civilizations.Remove(civ);
             deadCivilizations.Clear();
             //Debug.WriteLine(civilizations[1].Strength);
-            tickCount++;
-            if (tickCount % 100 == 0)
+            ticksCount++;
+            if (ticksCount % 100 == 0)
             {
                 sw.Stop();
                 last100TicksMilliseconds = sw.ElapsedMilliseconds;
-                Trace.WriteLine("Tick " + tickCount + ": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
+                Trace.WriteLine("TickEvent " + ticksCount + ": Last 100 ticks: " + sw.ElapsedTicks / Stopwatch.Frequency + "s. Last 100 average: " + last100TicksMilliseconds / 100 + "ms/tick");
                 sw = new Stopwatch();
                 sw.Start();
             }
+            Tick();
         }
 
         public void SplitCivilization(Civ empire)

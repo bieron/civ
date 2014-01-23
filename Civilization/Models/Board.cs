@@ -14,12 +14,32 @@ namespace Civilization.Models
         private bool useThreads;
         private bool bFirstTick;
         private TaskBoardProcessor taskBoardProcessor;
+        private string mapTitle;
+
+        //cell computation help constants
+        private int wPlusH;
+        private int wPlusHByDivider;
+        private int divider = 10;
+
+        public int WPlusH
+        {
+            get { return wPlusH; }
+        }
+
+        public int WPlusHByDivider
+        {
+            get { return wPlusHByDivider; }
+        }
 
         public bool UseThreads
         {
             get { return useThreads; }
         }
 
+        public string MapTitle
+        {
+            get { return mapTitle; }
+        }
 
         public Cell[][] Cells
         {
@@ -36,11 +56,14 @@ namespace Civilization.Models
             get { return width; }
         }
 
-        public Board(string mapTitle)
+        public Board(string _mapTitle)
         {
+            mapTitle = _mapTitle;
             Bitmap terrainBmp = new Bitmap(@"..\..\Resources\" + mapTitle + @"\terrain.bmp");
             height = terrainBmp.Height;
             width = terrainBmp.Width;
+            wPlusH = width + height;
+            wPlusHByDivider = wPlusH / divider;
             CreateCells();
             InitializeNeighbours();
             InitializeCells();
@@ -50,6 +73,10 @@ namespace Civilization.Models
             if (useThreads)
             {
                 taskBoardProcessor = TaskBoardProcessor.CreateNTasksForBoard(4, height, width);
+            }
+            else
+            {
+                System.Console.WriteLine(@"SINGLE-THREAD MODE! Toggle useThreads in Board class constructor to use multi-threading");
             }
         }
 
@@ -159,11 +186,12 @@ namespace Civilization.Models
         {
             DetermineReachability();
             DetermineDesirability();
+            DetermineDefensibility();
         }
 
         private void DetermineReachability()
         {
-            Bitmap landBMP = new Bitmap(@"..\..\Resources\EgyptMap\land.bmp");
+            Bitmap landBMP = new Bitmap(@"..\..\Resources\" + mapTitle + @"\land.bmp");
             for (int i = 0; i < landBMP.Width; i++)
                 for (int j = 0; j < landBMP.Height; j++)
                     if (landBMP.GetPixel(i, j).R == 0)
@@ -172,10 +200,18 @@ namespace Civilization.Models
 
         private void DetermineDesirability()
         {
-            Bitmap desBMP = new Bitmap(@"..\..\Resources\EgyptMap\desirability.bmp");
+            Bitmap desBMP = new Bitmap(@"..\..\Resources\" + mapTitle + @"\desirability.bmp");
             for (int i = 0; i < desBMP.Width; i++)
                 for (int j = 0; j < desBMP.Height; j++)
                     cells[i][j].Desirability = desBMP.GetPixel(i, j).R;
+        }
+
+        private void DetermineDefensibility()
+        {
+            Bitmap defBMP = new Bitmap(@"..\..\Resources\" + mapTitle + @"\defensibility.bmp");
+            for (int i = 0; i < defBMP.Width; i++)
+                for (int j = 0; j < defBMP.Height; j++)
+                    cells[i][j].Defensibility = defBMP.GetPixel(i, j).R;
         }
 
         public void Tick()

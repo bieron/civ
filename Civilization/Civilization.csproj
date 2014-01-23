@@ -14,6 +14,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,7 +27,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -173,6 +173,7 @@
     </Compile>
     <Compile Include="Models\ColorDistributor.cs" />
     <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\Mp3Player.cs" />
     <Compile Include="Models\TaskBoardProcessor.cs" />
     <Compile Include="ViewModels\GuiViewModel.cs" />
     <Compile Include="ViewModels\PaintingViewModel.cs" />
@@ -236,7 +237,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\EgyptMap\desirability.bmp" />
     <Resource Include="Resources\EgyptMap\land.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +258,39 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMap\defensibility.bmp" />
+    <Resource Include="Resources\EgyptMap\desirability.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMapHuge\defensibility.bmp" />
+    <Resource Include="Resources\EgyptMapHuge\desirability.bmp" />
+    <Resource Include="Resources\EgyptMapHuge\land.bmp" />
+    <Resource Include="Resources\EgyptMapHuge\terrain.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMapSmall\land.bmp" />
+    <Resource Include="Resources\EgyptMapSmall\terrain.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\EgyptMapSmall\defensibility.bmp" />
+    <Resource Include="Resources\EgyptMapSmall\desirability.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Music\Sample\intro.mp3" />
+    <Content Include="Resources\Music\Sample\music.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,9 +12,13 @@ namespace Civilization.ViewModels
     {
         private GraphicsDeviceManager graphicsDeviceManager;
         private Texture2D texture;
-        private Texture2D savedTexture;
+        private Texture2D terrainTexture, desTexture, defTexture;
         private VertexInputLayout inputLayout;
         private bool runSimulation = false;
+        private bool bPaintBorders = true;
+        private bool bPaintTerritory = true;
+        private bool bPaintCapitals = true;
+        private string usedTextureString = "Teren";
 
         public Scene()
         {
@@ -23,6 +27,26 @@ namespace Civilization.ViewModels
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
+        }
+
+        public string UsedTextureString
+        {
+            set { usedTextureString = value; }
+        }
+
+        public void SetPaintBorders(bool val)
+        {
+            bPaintBorders = val;
+        }
+
+        public void SetPaintTerritory(bool val)
+        {
+            bPaintTerritory = val;
+        }
+
+        public void SetPaintCapitals(bool val)
+        {
+            bPaintCapitals = val;
         }
 
         public void RunSimulation()
@@ -38,7 +62,9 @@ namespace Civilization.ViewModels
 #if (DESIGN_MODE != true)
         protected override void LoadContent()
         {
-            savedTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\EgyptMap\terrain.bmp");
+            terrainTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\" + MainModel.Instance.GameBoard.MapTitle + @"\terrain.bmp");
+            desTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\" + MainModel.Instance.GameBoard.MapTitle + @"\desirability.bmp");
+            defTexture = Texture2D.Load(GraphicsDevice, @"..\..\Resources\" + MainModel.Instance.GameBoard.MapTitle + @"\defensibility.bmp");
             base.LoadContent();
         }
 
@@ -50,9 +76,16 @@ namespace Civilization.ViewModels
             for (int i=0;i<MainModel.Instance.DrawSpeed;i++)
                 MainModel.Instance.GameBoard.Tick();
 
-            Image img = savedTexture.GetDataAsImage();
+            Image img;
+            if(usedTextureString=="Teren")
+                img = terrainTexture.GetDataAsImage();
+            else if (usedTextureString == "Desirability")
+                img = desTexture.GetDataAsImage();
+            else
+                img = defTexture.GetDataAsImage();
             PaintCountries(img);
-            PaintCapitals(img);
+            if(bPaintCapitals)
+                PaintCapitals(img);
 
             if (texture != null)
                 texture.Dispose();
@@ -62,7 +95,7 @@ namespace Civilization.ViewModels
             base.Update(gameTime);
         }
 
-        private static void PaintCountries(Image img)
+        private void PaintCountries(Image img)
         {
             Cell[][] cells = MainModel.Instance.GameBoard.Cells;
             for (int i = 0; i < img.PixelBuffer[0].Width; i++)
@@ -77,9 +110,9 @@ namespace Civilization.ViewModels
                             bInternal = false;
                             break;
                         }
-                    if (bInternal)
+                    if (bPaintTerritory&&(bInternal||!bPaintBorders))
                         img.PixelBuffer[0].SetPixel(i, j, cells[i][j].Owner.Color);
-                    else
+                    if(bPaintBorders&&!bInternal)
                         img.PixelBuffer[0].SetPixel(i, j, new Color(255, 0, 0));
                 }
             }

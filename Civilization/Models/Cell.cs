@@ -6,7 +6,7 @@ namespace Civilization.Models
     public class Cell
     {
         private List<Cell> neighbors;
-        private double desirability, defensibility;
+        private double desirability, defensibility, compDefensibility, defDivider = 50.0;
         private Dictionary<Civ, double> capitalDistance;
         private Civ owner;
         private Civ newOwner;
@@ -23,6 +23,17 @@ namespace Civilization.Models
         {
             get { return desirability; }
             set { desirability = value; }
+        }
+
+        public double Defensibility
+        {
+            get { return defensibility; }
+            set { 
+                defensibility = value;
+                compDefensibility = defensibility / defDivider;
+                if (compDefensibility < 1.0)
+                    compDefensibility = 1.0;
+            }
         }
 
         public Civ Owner
@@ -80,12 +91,14 @@ namespace Civilization.Models
 
             foreach (Cell neighbour in neighbors)
             {
+                if (neighbour.Owner == owner)
+                    continue;
                 if (neighbour.Owner != null)
                     if (owner == null)
                     {
                         if (!reachable)
                         {
-                            if (random.Next(255) <= desirability + 10)
+                            if (random.Next(255) <= desirability+5)
                             {
                                 newOwner = neighbour.Owner;
                                 return;
@@ -101,8 +114,9 @@ namespace Civilization.Models
                     {
                         if (neighbour.Owner != owner)
                         {
-                            double thisStrength = owner.Strength * (Math.Max(((MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height)/10 - DistanceToCapitalOf(owner) ), 35)/ (MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height));
-                            double neighbourStrength = neighbour.Owner.Strength * (Math.Max(((MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height)/10 - DistanceToCapitalOf(neighbour.Owner)), 35) / (MainModel.Instance.GameBoard.Width + MainModel.Instance.GameBoard.Height));
+                            double thisStrength = owner.Strength * (Math.Max((MainModel.Instance.GameBoard.WPlusHByDivider - DistanceToCapitalOf(owner) ), 35)/ (MainModel.Instance.GameBoard.WPlusH));
+                            thisStrength *= compDefensibility;
+                            double neighbourStrength = neighbour.Owner.Strength * (Math.Max((MainModel.Instance.GameBoard.WPlusHByDivider - DistanceToCapitalOf(neighbour.Owner)), 35) / (MainModel.Instance.GameBoard.WPlusH));
                             if (reachable)
                             {
                                 double db = random.NextDouble();
