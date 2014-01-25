@@ -113,7 +113,8 @@ namespace Civilization.Models
 
         public void CalculateStrength()
         {
-            strength = landCells * (landDesirability/landCells) + 0.1 * landCellsdt;
+            //strength = landCells * (landDesirability/landCells) + 0.1 * landCellsdt;
+            strength = landDesirability + landCellsdt / 10.0;
         }
     }
 }
