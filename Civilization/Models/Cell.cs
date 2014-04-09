@@ -94,6 +94,11 @@ namespace Civilization.Models
 
         public void CalculateNewOwner(Random random = null)
         {
+            if (stable)
+            {
+                newOwner = owner;
+                return;
+            }
             if (random == null)
                 random = MainModel.Instance.Random;
 
@@ -156,9 +161,20 @@ namespace Civilization.Models
 
         public void ChangeOwner()
         {
+            if(stable)
+            {
+                newOwner = null;
+                return;
+            }
             if (owner == newOwner)
             {
                 newOwner = null;
+                foreach (Cell neighbour in neighbors)
+                {
+                    if (neighbour.Owner != owner)
+                        return;
+                }
+                stable = true;
                 return;
             }
             if (owner != null)
@@ -167,6 +183,10 @@ namespace Civilization.Models
                 newOwner.GainedCell(this);
             owner = newOwner;
             newOwner = null;
+            foreach (Cell neighbour in neighbors)
+            {
+                neighbour.IsStable = false;
+            }
         }
 
         public void AddNeighbour(Cell neighbour)

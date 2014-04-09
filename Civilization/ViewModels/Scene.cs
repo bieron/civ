@@ -113,8 +113,8 @@ namespace Civilization.ViewModels
                             break;
                         }
                     if (bPaintTerritory && (bInternal || !bPaintBorders)) {
-                        //img.PixelBuffer[0].SetPixel(i, j, cells[i][j].Owner.Color);
-                           img.PixelBuffer[0].SetPixel(i, j, cells[i][j].IsStable? blue : cells[i][j].Owner.Color);
+                        img.PixelBuffer[0].SetPixel(i, j, cells[i][j].Owner.Color);
+                           //img.PixelBuffer[0].SetPixel(i, j, cells[i][j].IsStable? blue : cells[i][j].Owner.Color);
 
                     }  else if (bPaintBorders && !bInternal)
                         img.PixelBuffer[0].SetPixel(i, j, red);

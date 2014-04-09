@@ -268,7 +268,7 @@ namespace Civilization.Models
                 {
                 //    if (cells[i][j].IsStable) continue;
                     cells[i][j].CalculateNewOwner(random);
-                    cells[i][j].defineStability();
+                    //cells[i][j].defineStability();
                 }
             }
         }
