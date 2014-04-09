@@ -29,7 +29,7 @@ namespace Civilization.Models
         private long last100TicksMilliseconds;
         private Stopwatch sw;
         private bool doSplits=true;
-        private Mp3Player musicPlayer;
+        //private Mp3Player musicPlayer;
 
         private string selectedBG;
 
@@ -89,7 +89,7 @@ namespace Civilization.Models
             
             System.Console.WriteLine("MainModel begin");
             gameBoard = new Board("EgyptMap");
-            musicPlayer = new Mp3Player(@"..\..\Resources\Music\Sample\intro.mp3", @"..\..\Resources\Music\Sample\music.mp3");
+            //musicPlayer = new Mp3Player(@"..\..\Resources\Music\Sample\intro.mp3", @"..\..\Resources\Music\Sample\music.mp3");
             civilizations = new List<Civ>();
             deadCivilizations = new List<Civ>();
             newCivilizations = new List<Civ>();

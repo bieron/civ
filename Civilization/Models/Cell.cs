@@ -13,6 +13,7 @@ namespace Civilization.Models
         private int xCoord, yCoord; //będzie to potrzebne m.in. do stolic
         private bool reachable; //przyda się do odległości od stolicy
         private static double waterCost = 5.0;
+        private bool stable;
 
         public List<Cell> Neighbors
         {
@@ -54,6 +55,12 @@ namespace Civilization.Models
             set { reachable = value; }
         }
 
+        public bool IsStable
+        {
+            get { return stable; }
+            set { stable = value; }
+        }
+
         public int X
         {
             get { return xCoord; }
@@ -74,6 +81,7 @@ namespace Civilization.Models
             xCoord = x;
             yCoord = y;
             reachable = true;
+            stable = false;
         }
 
         public void Clear()
@@ -204,6 +212,16 @@ namespace Civilization.Models
         public void SetUnreachable()
         {
             reachable = false;
+        }
+
+        internal void defineStability() {
+            foreach(Cell c in neighbors) {
+                if (null == owner || c.owner != owner) {
+                    stable = false;
+                    return;
+                }
+            }
+            stable = true;
         }
     }
 }

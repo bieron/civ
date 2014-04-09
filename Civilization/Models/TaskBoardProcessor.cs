@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-//using Owin;
-=======
->>>>>>> 2c3e31408cf558a285ca8e5fabef0f8fa1ccac23
 
 
 namespace Civilization.Models

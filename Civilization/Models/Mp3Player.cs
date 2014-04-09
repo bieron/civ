@@ -5,17 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WMPLib;
+//using WMPLib;
 
 
 namespace Civilization.Models
 {
 
-    class Mp3Player
+  /*  class Mp3Player
     {
         private readonly string introMP3path;
         private readonly string musicMP3path;
-        private WindowsMediaPlayer wmPlayer;
+        //private WindowsMediaPlayer wmPlayer;
         private bool playing;
         private Task playerLoopTask;
 
@@ -30,8 +30,7 @@ namespace Civilization.Models
          * 
          * jeśli nie będzie widział WMPLib trzeba go jakoś zaimportować, jest chyba w System32
          */
-        public Mp3Player(string intro, string music)
-        {
+/*        public Mp3Player(string intro, string music) {
             introMP3path = Path.GetFullPath(intro);//z jakiegoś powodu przy relative path lecą wyjątki
             musicMP3path = Path.GetFullPath(music);
             wmPlayer = new WindowsMediaPlayer();
@@ -75,5 +74,5 @@ namespace Civilization.Models
                 PlayNextTrack();
             }
         }
-    }
+    }*/
 }

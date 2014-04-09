@@ -56,7 +56,7 @@ namespace Civilization.Views
             InitializeComponent();
         }
 
-        private Game game;
+        //private Game game;
 
         public Game Game
         {
