@@ -13,7 +13,7 @@ namespace Civilization.ViewModels
         private GraphicsDeviceManager graphicsDeviceManager;
         private Texture2D texture;
         private Texture2D terrainTexture, desTexture, defTexture;
-        private VertexInputLayout inputLayout;
+        //private VertexInputLayout inputLayout;
         private bool runSimulation = false;
         private bool bPaintBorders = true;
         private bool bPaintTerritory = true;
@@ -98,6 +98,8 @@ namespace Civilization.ViewModels
         private void PaintCountries(Image img)
         {
             Cell[][] cells = MainModel.Instance.GameBoard.Cells;
+            Color red = new Color(255,0,0);
+            Color blue = new Color(0,0,255);
             for (int i = 0; i < img.PixelBuffer[0].Width; i++)
             {
                 for (int j = 0; j < img.PixelBuffer[0].Height; j++)
@@ -110,10 +112,12 @@ namespace Civilization.ViewModels
                             bInternal = false;
                             break;
                         }
-                    if (bPaintTerritory&&(bInternal||!bPaintBorders))
-                        img.PixelBuffer[0].SetPixel(i, j, cells[i][j].Owner.Color);
-                    if(bPaintBorders&&!bInternal)
-                        img.PixelBuffer[0].SetPixel(i, j, new Color(255, 0, 0));
+                    if (bPaintTerritory && (bInternal || !bPaintBorders)) {
+                        //img.PixelBuffer[0].SetPixel(i, j, cells[i][j].Owner.Color);
+                           img.PixelBuffer[0].SetPixel(i, j, cells[i][j].IsStable? blue : cells[i][j].Owner.Color);
+
+                    }  else if (bPaintBorders && !bInternal)
+                        img.PixelBuffer[0].SetPixel(i, j, red);
                 }
             }
         }

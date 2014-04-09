@@ -266,7 +266,9 @@ namespace Civilization.Models
             {
                 for (int j = fromY; j < toY; j++)
                 {
+                //    if (cells[i][j].IsStable) continue;
                     cells[i][j].CalculateNewOwner(random);
+                    cells[i][j].defineStability();
                 }
             }
         }

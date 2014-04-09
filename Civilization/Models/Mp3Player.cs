@@ -66,7 +66,7 @@ namespace Civilization.Models
         {
             while (true)
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(15000);
                 while (wmPlayer.controls.currentPosition>0)
                 {
                     Thread.Sleep(10);

@@ -190,8 +190,10 @@ namespace Civilization.Models
             Civ newEmpire = new Civ(gameBoard.PickRandomCapital(empire, 75), empire.Name+random.Next(255), colors.GetNextColor());
             newEmpire.SettleCiv();
             newEmpire.LandCellsdt = (empire.LandCellsdt / 10) * 7;
+            //newEmpire.LandCellsdt = (long)empire.Strength * 7;
             empire.LandCellsdt = (empire.LandCellsdt / 10) * 2;
             empire.LostCell(newEmpire.Capital);
+            empire.SplitCount++;
             newEmpire.CalculateStrength();
             empire.CalculateStrength();
             for(int i=-10;i<=10;i++)
